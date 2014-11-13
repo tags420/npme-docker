@@ -1,8 +1,8 @@
-# npme Docker
+# npme Docker Image
 
 run npm Enterprise in a Docker container.
 
-# Running npm Enterprise as a container
+## Running npm Enterprise as a container
 
 1. clone this repo.
 2. visit https://www.npmjs.org/enterprise, and signup for a license.
@@ -14,7 +14,7 @@ run npm Enterprise in a Docker container.
 
 You should now have a functional private registry, that's all there is to it!
 
-# Caveats
+## Tips and Tricks
 
 On OSX I needed to open up port `:8080`:
 
@@ -22,6 +22,6 @@ On OSX I needed to open up port `:8080`:
 VBoxManage modifyvm "boot2docker-vm" --natpf1 "tcp-port8080,tcp,,8080,,8080";
 ```
 
-# License
+## License
 
 (c) 2014 - npm, Inc. See LICENSE.txt for details.
