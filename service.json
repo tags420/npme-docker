@@ -67,8 +67,8 @@
     "--binary-directory": "/etc/npme/packages",
     "--auth-fetch": "true",
     "--shared-fetch-secret": "change-me-to-a-secure-token",
-    "--authentication-method": "fake",
-    "--authorization-method": "fake",
-    "--session-handler": "redis"
+    "--authentication-method": "github",
+    "--authorization-method": "github",
+    "--session-handler": "github"
   }
 }
