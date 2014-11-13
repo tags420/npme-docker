@@ -1,5 +1,12 @@
 ############################################################
-# Run an npmE server as a docker container!
+# Run an npm Enterprise server as a docker container.
+#
+# 1. signup for a license: https://www.npmjs.org/enterprise
+# 2. run: npm install; npm run-script configure
+# 3. run: docker build -t npme .
+# 4. run: docker run -p 8080:8080 -t npme
+#
+# (c) 2014 - npm, Inc see LICENSE.txt
 ############################################################
 
 # Set the base image to Ubuntu
@@ -8,7 +15,8 @@ FROM bcoe/npme
 # File Author / Maintainer
 MAINTAINER Ben Coe
 
-# Start the npme services
+# Copy user-specific configuration.
+COPY service.json /etc/npme/service.json
 RUN cd /etc/npme; ndm generate --uid=npme --gid=npme --platform=initd
 
 # Expose ports
