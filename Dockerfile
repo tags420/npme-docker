@@ -15,8 +15,11 @@ FROM bcoe/npme
 # File Author / Maintainer
 MAINTAINER Ben Coe
 
-# Copy user-specific configuration.
+# Copy configuration/license and upgrade npm Enterprise.
 COPY service.json /etc/npme/service.json
+COPY .license.json /etc/npme/.license.json
+RUN rm -rf /etc/npme/node_modules/@npm
+RUN npme update
 RUN cd /etc/npme; ndm generate --uid=npme --gid=npme --platform=initd
 
 # Expose ports
