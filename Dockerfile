@@ -20,9 +20,10 @@ RUN echo "\n\n--- IMPORTANT ---\nabout to copy configuration, make sure:\n\t1. y
 
 COPY service.json /etc/npme/service.json
 COPY .license.json /etc/npme/.license.json
+RUN npm install ndm -g
 RUN rm -rf /etc/npme/node_modules/@npm
 RUN npme update
-RUN cd /etc/npme; ndm generate --uid=npme --gid=npme --platform=initd
+RUN cd /etc/npme; ndm generate --uid=root --gid=root --platform=initd
 
 # Expose ports
 EXPOSE 8080
@@ -30,4 +31,4 @@ EXPOSE 8080
 # Set the default directory where CMD will execute
 WORKDIR /etc/npme
 
-CMD  service redis-server start | service nginx start | couchdb | npme restart | tail -f ./logs/*
+CMD service redis-server start | service nginx start | couchdb | npme restart | tail -f ./logs/*
