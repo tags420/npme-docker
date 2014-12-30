@@ -14,6 +14,20 @@ run npm Enterprise in a Docker container.
 
 You should now have a functional private registry, that's all there is to it!
 
+## Running npm Enterprise as an Interactive Container
+
+1. rather than running `docker run -p 8080:8080 -t npme`, run:
+
+`docker run -i -p 8080:8080 -t npme bash`
+
+2. to start up npm Enterprise, run:
+  1. `cd /etc/npme`
+  2. run: `service redis-server start | service nginx start | couchdb | npme restart | tail -f ./logs/*`
+3. to experiment with configuration changes:
+  1. edit `/etc/npme/service.json`.
+  2. run `generate-scripts`.
+  3. start npm Enterprise.
+
 ## Tips and Tricks
 
 On OSX I needed to open up port `:8080`:

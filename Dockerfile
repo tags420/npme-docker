@@ -20,6 +20,7 @@ RUN echo "\n\n--- IMPORTANT ---\nabout to copy configuration, make sure:\n\t1. y
 
 COPY service.json /etc/npme/service.json
 COPY .license.json /etc/npme/.license.json
+COPY .ndmrc /etc/npme/.ndmrc
 RUN npm install ndm -g
 RUN rm -rf /etc/npme/node_modules/@npm
 RUN npme update
