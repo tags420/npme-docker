@@ -36,6 +36,9 @@ On OSX I needed to open up port `:8080`:
 VBoxManage modifyvm "boot2docker-vm" --natpf1 "tcp-port8080,tcp,,8080,,8080";
 ```
 
+To start a shell in a running npm Enterprise container, you can run `docker exec 
+-t -i <container-id> bash`.
+
 ## License
 
 (c) 2014 - npm, Inc. See LICENSE.txt for details.
