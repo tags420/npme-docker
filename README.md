@@ -24,9 +24,10 @@ You should now have a functional private registry, that's all there is to it!
   1. `cd /etc/npme`
   2. run: `service redis-server start | service nginx start | couchdb | npme restart | tail -f ./logs/*`
 3. to experiment with configuration changes:
-  1. edit `/etc/npme/service.json`.
-  2. run `generate-scripts`.
-  3. start npm Enterprise (`service redis-server start | service nginx start | couchdb | npme restart | tail -f ./logs/*`).
+  1. `cd /etc/npme`
+  2. edit `/etc/npme/service.json`.
+  3. run `ndm generate`.
+  4. start npm Enterprise (`service redis-server start | service nginx start | couchdb | npme restart | tail -f ./logs/*`).
 
 ## Tips and Tricks
 
