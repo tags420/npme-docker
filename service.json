@@ -64,9 +64,12 @@
       "default": "https://api.github.com",
       "description": "full url of your Github Enterprise appliance"
     },
+    "--shared-fetch-secret": {
+      "default": "{{uuid}}",
+      "description": "secret used between internal services (probably leave as is)"
+    },
     "--binary-directory": "/etc/npme/packages",
     "--auth-fetch": "true",
-    "--shared-fetch-secret": "change-me-to-a-secure-token",
     "--authentication-method": "github",
     "--authorization-method": "github",
     "--session-handler": "github"

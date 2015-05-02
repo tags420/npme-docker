@@ -4,12 +4,9 @@
   "description": "run npm Enterprise in a Docker container",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "bin": "./bin/configure.js",
-  "scripts": {
     "configure": "node ./bin/configure.js"
   },
+  "bin": "./bin/configure.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/bcoe/npme-docker.git"
@@ -25,7 +22,7 @@
   },
   "homepage": "https://github.com/bcoe/npme-docker",
   "dependencies": {
-    "ndm": "^3.7.0",
+    "ndm": "^3.10.0",
     "npme": "^1.1.2"
   }
 }
