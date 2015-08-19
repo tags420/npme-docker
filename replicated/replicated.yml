@@ -7,6 +7,28 @@ properties:
   logo_url: "https://s3.amazonaws.com/replicated-vendor-assets/66045325f001a1e0ccde2d457cb2b30b/66045325f001a1e0ccde2d457cb2b30b.png"
   console_title: "npm Enterprise Management Console"
   bypass_local_registry: true
+  shell_alias: npme
+admin_commands:
+- alias: update-license
+  command: [replicated-cli, license, sync]
+  run_type: local
+  interactive: false
+- alias: reset-follower
+  command: [npme, reset-follower]
+  run_type: exec
+  interactive: false
+  component: npme
+  image:
+    image_name: npme
+    version: '[IMAGE_VERSION]'
+- alias: add-to-whitelist
+  command: [npme, add-to-whitelist]
+  run_type: exec
+  interactive: true
+  component: npme
+  image:
+    image_name: npme
+    version: '[IMAGE_VERSION]'
 state:
   ready: null
 backup:
@@ -227,3 +249,4 @@ config:
       recommended: true
       type: text
       required: false
+
