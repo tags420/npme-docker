@@ -35,5 +35,5 @@ WORKDIR /etc/npme
 COPY start.sh /start.sh 
 
 # CMD service redis-server start | service nginx start | couchdb | npme restart | tail -f ./logs/*
-ENTRYPOINT ["/start.sh"]
+CMD ["/start.sh"]
 
