@@ -6,25 +6,32 @@ properties:
   app_url: null
   logo_url: "https://s3.amazonaws.com/replicated-vendor-assets/66045325f001a1e0ccde2d457cb2b30b/66045325f001a1e0ccde2d457cb2b30b.png"
   console_title: "npm Enterprise Management Console"
-  bypass_local_registry: true
-  shell_alias: npme
+  bypass_local_registry: false
 admin_commands:
 - alias: update-license
-  command: [replicated-cli, license, sync]
-  run_type: local
-  interactive: false
-- alias: reset-follower
-  command: [npme, reset-follower]
+  command: [sh, /usr/local/bin/npme-update-license.sh]
   run_type: exec
-  interactive: false
   component: npme
   image:
     image_name: npme
     version: '[IMAGE_VERSION]'
-- alias: add-to-whitelist
-  command: [npme, add-to-whitelist]
+- alias: reset-follower
+  command: [npme, reset-follower]
   run_type: exec
-  interactive: true
+  component: npme
+  image:
+    image_name: npme
+    version: '[IMAGE_VERSION]'
+- alias: add-package
+  command: [npme, add-package]
+  run_type: exec
+  component: npme
+  image:
+    image_name: npme
+    version: '[IMAGE_VERSION]'
+- alias: ssh
+  run_type: exec
+  command: [/bin/bash]
   component: npme
   image:
     image_name: npme
@@ -60,6 +67,25 @@ components:
       data: ""
       subscriptions: []
     config_files:
+    - filename: /usr/local/bin/npme-update-license.sh
+      contents: |-
+        #!/bin/bash
+        echo -n "[?] enter your billing email: "
+        read billing_email
+        echo -n "[?] enter your license key: "
+        read license_key
+
+        http_code=$(curl -s -o /dev/null -w "%{http_code}" -k -X POST --data-urlencode "billing_email=$billing_email" --data-urlencode "license_key=$license_key" ${REPLICATED_INTEGRATIONAPI}/license/v1/sync_with_data)
+
+        if [ $http_code -eq 404 ]; then
+          echo "  license was not found"
+        elif [ $http_code -eq 403 ]; then
+          echo "  license is expired"
+        elif [ $http_code -eq 204 ]; then
+          echo "  license updated \\o/"
+        else
+          echo "  error updating license"
+        fi
     - filename: /etc/npme/.license.json
       contents: |-
         {{repl LicenseFieldValue "license_json" }}
@@ -143,7 +169,11 @@ components:
       public_port: "8080"
       port_type: tcp
       when: ""
-    volumes: []
+    volumes:
+    - host_path: '{{repl ConfigOption "couchdb_host_path" }}'
+      container_path: /etc/npme/couchdb
+    - host_path: '{{repl ConfigOption "packages_host_path" }}'
+      container_path: /etc/npme/packages
     support_files: []
     support_commands: []
 cmds:
@@ -180,6 +210,18 @@ config:
     title: Proxy URL
     type: text
     required: false
+- name: storage
+  title: Storage
+  description: Configure the location of persistent npm Enterprise storage
+  items:
+  - name: couchdb_host_path
+    description: CouchDb storage path on host
+    type: text
+    default: /etc/npme/couchdb
+  - name: packages_host_path
+    description: Package storage path on host
+    type: text
+    default: /etc/npme/packages
 - name: read_through_cache
   title: Read through cache
   description: Should missing packages be returned from npmjs.com?
