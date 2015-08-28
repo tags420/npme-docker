@@ -36,7 +36,7 @@ COPY ./replicated/start.sh /start.sh
 
 # Setup the cron that rolls our policy-follower (which seems to have connectivity issues inside Docker currently)
 # Add crontab file in the cron directory
-ADD crontab /etc/cron.d/policy-follower-cron
+ADD ./replicated/policy-follower-cron /etc/cron.d/policy-follower-cron
 
 # Give execution rights on the cron job
 RUN chmod 0644 /etc/cron.d/policy-follower-cron
