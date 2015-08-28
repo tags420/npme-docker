@@ -1,1 +1,1 @@
-*/5 * * * * root cd /etc/npme; /usr/bin/ndm stop policy-follower; /usr/bin/ndm start policy-follower >> /var/log/cron.log 2>&1
+* * * * * root /usr/bin/npme start >> /var/log/cron.log 2>&1
