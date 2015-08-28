@@ -34,6 +34,16 @@ WORKDIR /etc/npme
 
 COPY ./replicated/start.sh /start.sh 
 
+# Setup the cron that rolls our policy-follower (which seems to have connectivity issues inside Docker currently)
+# Add crontab file in the cron directory
+ADD crontab /etc/cron.d/policy-follower-cron
+
+# Give execution rights on the cron job
+RUN chmod 0644 /etc/cron.d/policy-follower-cron
+
+# Create the log file to be able to run tail
+RUN touch /var/log/cron.log
+
 # CMD service redis-server start | service nginx start | couchdb | npme restart | tail -f ./logs/*
 CMD ["/start.sh"]
 
