@@ -16,7 +16,7 @@ admin_commands:
     image_name: npme
     version: '[IMAGE_VERSION]'
 - alias: reset-follower
-  command: [sh, rm /etc/npme/data/sequence;ndm stop policy-follower;ndm start policy-follower]
+  command: [su, -, root, -c, cd /etc/npme;ndm stop policy-follower;rm ./data/sequence;ndm start policy-follower]
   run_type: exec
   component: npme
   image:
@@ -148,6 +148,9 @@ components:
             "description": "Like npm, only inside your firewall",
             "scripts": {
               "manage-whitelist": "./bin/package-whitelist.js"
+            },
+            "args": {
+              "--white-list-path": "/etc/npme/data/whitelist"
             }
           },
           "env": {},
