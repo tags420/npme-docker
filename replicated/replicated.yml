@@ -116,7 +116,7 @@ components:
             "args": {
               "start": "",
               "--white-list-path": "/etc/npme/data/whitelist",
-              "--seq-file": "/etc/npme/data/sequence",
+              "--seq-file": "/etc/npme/data/sequence"
             }
           },
           "validate-and-store": {
