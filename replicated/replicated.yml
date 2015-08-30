@@ -16,7 +16,7 @@ admin_commands:
     image_name: npme
     version: '[IMAGE_VERSION]'
 - alias: reset-follower
-  command: [npme, reset-follower]
+  command: [sh, rm /etc/npme/data/sequence;ndm stop policy-follower;ndm start policy-follower]
   run_type: exec
   component: npme
   image:
@@ -74,9 +74,9 @@ components:
         read billing_email
         echo -n "[?] enter your license key: "
         read license_key
-        
+
         http_code=$(curl -s -o /dev/null -w "%{http_code}" -k -X POST --data-urlencode "billing_email=$billing_email" --data-urlencode "license_key=$license_key" ${REPLICATED_INTEGRATIONAPI}/license/v1/sync_with_data)
-        
+
         if [ $http_code -eq 404 ]; then
           echo "  license was not found"
         elif [ $http_code -eq 403 ]; then
@@ -114,7 +114,9 @@ components:
             },
             "env": {},
             "args": {
-              "start": ""
+              "start": "",
+              "--white-list-path": "/etc/npme/data/whitelist",
+              "--seq-file": "/etc/npme/data/sequence",
             }
           },
           "validate-and-store": {
@@ -176,6 +178,8 @@ components:
       container_path: /etc/npme/couchdb
     - host_path: '{{repl ConfigOption "packages_host_path" }}'
       container_path: /etc/npme/packages
+    - host_path: '{{repl ConfigOption "data_host_path" }}'
+      container_path: /etc/npme/data
     support_files: []
     support_commands: []
 cmds:
@@ -219,11 +223,15 @@ config:
   - name: couchdb_host_path
     description: CouchDb storage path on host
     type: text
-    default: /etc/npme/couchdb
+    default: /usr/local/lib/npme/couchdb
   - name: packages_host_path
     description: Package storage path on host
     type: text
-    default: /etc/npme/packages
+    default: /usr/local/lib/npme/packages
+  - name: data_host_path
+    description: Miscellaneous data files
+    type: text
+    default: /usr/local/lib/npme/data
 - name: read_through_cache
   title: Read through cache
   description: Should missing packages be returned from npmjs.com?
@@ -293,4 +301,3 @@ config:
       recommended: true
       type: text
       required: false
-
