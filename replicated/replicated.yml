@@ -115,7 +115,7 @@ components:
             "env": {},
             "args": {
               "start": "",
-              "--seq-file": "{{repl ConfigOption "data_host_path" }}/sequence"
+              "--seq-file": "/etc/npme/data/sequence"
             }
           },
           "validate-and-store": {
@@ -152,7 +152,7 @@ components:
           "env": {},
           "args": {
             "--front-door-host": "{{repl ConfigOption "canonical_url" }}",
-            "--white-list-path": "{{repl ConfigOption "data_host_path" }}/whitelist",
+            "--white-list-path": "/etc/npme/data/whitelist",
             "--github-host": {{repl if ConfigOptionEquals "github_type" "github_type_public" }}"https://api.github.com"{{repl else }}"https://{{repl ConfigOption "github_enterprise_host" }}"{{repl end }},
             "--shared-fetch-secret": "{{repl ConfigOption "secret" }}",
             "--binary-directory": "/etc/npme/packages",
