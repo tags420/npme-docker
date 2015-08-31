@@ -22,6 +22,7 @@ RUN echo "\n\n--- IMPORTANT ---\nabout to copy configuration, make sure:\n\t1. y
 # COPY .license.json /etc/npme/.license.json
 COPY .ndmrc /etc/npme/.ndmrc
 RUN npm install ndm -g
+COPY ./replicated/package.json /etc/npme/package.json
 RUN rm -rf /etc/npme/node_modules/@npm
 RUN npme update
 # RUN cd /etc/npme; ndm generate --uid=root --gid=root --platform=initd
@@ -32,7 +33,7 @@ EXPOSE 8080
 # Set the default directory where CMD will execute
 WORKDIR /etc/npme
 
-COPY ./replicated/start.sh /start.sh 
+COPY ./replicated/start.sh /start.sh
 
 # Setup the cron that rolls our policy-follower (which seems to have connectivity issues inside Docker currently)
 # Add crontab file in the cron directory
@@ -46,4 +47,3 @@ RUN touch /var/log/cron.log
 
 # CMD service redis-server start | service nginx start | couchdb | npme restart | tail -f ./logs/*
 CMD ["/start.sh"]
-
