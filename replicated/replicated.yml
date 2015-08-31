@@ -115,8 +115,7 @@ components:
             "env": {},
             "args": {
               "start": "",
-              "--white-list-path": "/etc/npme/data/whitelist",
-              "--seq-file": "/etc/npme/data/sequence"
+              "--seq-file": "{{repl ConfigOption "data_host_path" }}/sequence"
             }
           },
           "validate-and-store": {
@@ -140,8 +139,7 @@ components:
             "args": {
               "start": "",
               "--port": "8080",
-              "--host": "0.0.0.0",
-              "--white-list-path": "/etc/npme/data/whitelist"
+              "--host": "0.0.0.0"
             }
           },
           "package-whitelist": {
@@ -149,15 +147,12 @@ components:
             "description": "Like npm, only inside your firewall",
             "scripts": {
               "manage-whitelist": "./bin/package-whitelist.js"
-            },
-            "args": {
-              "--white-list-path": "/etc/npme/data/whitelist"
             }
           },
           "env": {},
           "args": {
             "--front-door-host": "{{repl ConfigOption "canonical_url" }}",
-            "--white-list-path": "/etc/npme/whitelist",
+            "--white-list-path": "{{repl ConfigOption "data_host_path" }}/whitelist",
             "--github-host": {{repl if ConfigOptionEquals "github_type" "github_type_public" }}"https://api.github.com"{{repl else }}"https://{{repl ConfigOption "github_enterprise_host" }}"{{repl end }},
             "--shared-fetch-secret": "{{repl ConfigOption "secret" }}",
             "--binary-directory": "/etc/npme/packages",
