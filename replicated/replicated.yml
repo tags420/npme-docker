@@ -275,20 +275,7 @@ config:
   - name: couch_url_remote
     type: text
     default: https://skimdb.npmjs.com/registry
-- name: authentication_plugins  - name: reject_unauthorized
-    type: select_one
-    default: reject_unauthorized_yes
-    items:
-    - name: reject_unauthorized_no
-      title: No
-      type: text
-      affix: left
-      required: false
-    - name: reject_unauthorized_yes
-      title: Yes
-      type: text
-      affix: right
-      required: false
+- name: authentication_plugins
   title: "Auth Plugins"
   description: "Auth plugins"
   items:
