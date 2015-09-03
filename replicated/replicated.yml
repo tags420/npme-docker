@@ -162,7 +162,7 @@ components:
             "--session-handler": "github",
             "--read-through-cache": "{{repl if ConfigOptionEquals "read_through_cache" "read_through_cache_no" }}false{{repl else }}true{{repl end}}",
             {{repl if ConfigOptionNotEquals "proxy_url" ""}}"--proxy-url": "{{repl ConfigOption "proxy_url" }}",{{repl end}}
-            "--reject-unauthorized": "{{repl if ConfigOptionEquals "reject_unauthorized" "reject_unauthorized_no" }}0{{repl end}}",
+            {{repl if ConfigOptionNotEquals "proxy_url" ""}}"--reject-unauthorized": "{{repl if ConfigOptionEquals "reject_unauthorized" "reject_unauthorized_no" }}0{{repl end}}{{repl end}}",
             "--couch-url-remote": "{{repl ConfigOption "couch_url_remote" }}"
           }
         }
