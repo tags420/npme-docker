@@ -156,10 +156,10 @@ components:
             "--github-host": {{repl if ConfigOptionEquals "github_type" "github_type_public" }}"https://api.github.com"{{repl else }}"https://{{repl ConfigOption "github_enterprise_host" }}"{{repl end }},
             "--shared-fetch-secret": "{{repl ConfigOption "secret" }}",
             "--binary-directory": "/etc/npme/packages",
-            "--auth-fetch": "true",
-            "--authentication-method": "github",
-            "--authorization-method": "github",
-            "--session-handler": "github",
+            "--auth-fetch": "{{repl if ConfigOptionEquals "authfetch" "authfetch_no" }}false{{repl else }}true{{repl end}}",
+            "--authentication-method": "{repl ConfigOption "authentication" }}",
+            "--authorization-method": "{repl ConfigOption "authorization" }}",
+            "--session-handler": "{repl ConfigOption "session" }}",
             "--read-through-cache": "{{repl if ConfigOptionEquals "read_through_cache" "read_through_cache_no" }}false{{repl else }}true{{repl end}}",
             {{repl if ConfigOptionNotEquals "proxy_url" ""}}"--proxy-url": "{{repl ConfigOption "proxy_url" }}",{{repl end}}
             {{repl if ConfigOptionEquals "reject_unauthorized" "reject_unauthorized_no" }}"--reject-unauthorized": "0",{{repl end}}
@@ -275,6 +275,36 @@ config:
   - name: couch_url_remote
     type: text
     default: https://skimdb.npmjs.com/registry
+- name: authentication_plugins
+  title: "Auth Plugins"
+  description: "Auth plugins"
+  items:
+  - name: authorization
+    title: Authorization plugin
+    type: text
+    default: 'github'
+  - name: authentication
+    title: Authentication plugin
+    type: text
+    default: 'github'
+  - name: session
+    title: Session plugin
+    type: text
+    default: 'github'
+  - name: authfetch
+    type: select_one
+    default: authfetch_yes
+    items:
+    - name: authfetch_no
+      title: No
+      type: text
+      affix: left
+      required: false
+    - name: authfetch_yes
+      title: Yes
+      type: text
+      affix: right
+      required: false
 - name: github
   title: Github Integration
   description: Provide the location of your Github account
