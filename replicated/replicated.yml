@@ -276,7 +276,7 @@ config:
     type: text
     default: https://skimdb.npmjs.com/registry
 - name: authentication_plugins
-  title: "Auth Plugins"
+  title: "Auth plugins"
   description: "Configure how npm on-site authenticates and authorizes users"
   items:
   - name: authorization
@@ -292,23 +292,25 @@ config:
     type: text
     default: 'github'
 - name: authfetch
-  title: Auth Reads
-  description: Should npm installs require auth tokens?
-  type: select_one
-  default: authfetch_yes
+  title: Auth reads
+  description: Should npm installs require an token?
   items:
-  - name: authfetch_no
-    title: No
-    type: text
-    affix: left
-    required: false
-  - name: authfetch_yes
-    title: Yes
-    type: text
-    affix: right
-    required: false
+  - name: authfetch
+    type: select_one
+    default: authfetch_yes
+    items:
+    - name: authfetch_no
+      title: No
+      type: text
+      affix: left
+      required: false
+    - name: authfetch_yes
+      title: Yes
+      type: text
+      affix: right
+      required: false
 - name: github
-  title: Github Integration
+  title: Github integration
   description: Provide the location of your Github account
   items:
   - name: github_type
