@@ -282,15 +282,15 @@ config:
   - name: authorization
     title: Authorization plugin
     type: text
-    value: 'github'
+    default: 'github'
   - name: authentication
     title: Authentication plugin
     type: text
-    value: 'github'
+    default: 'github'
   - name: session
     title: Session plugin
     type: text
-    value: 'github'
+    default: 'github'
   - name: authfetch
     type: select_one
     default: authfetch_yes
