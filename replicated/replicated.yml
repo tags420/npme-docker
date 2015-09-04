@@ -277,7 +277,7 @@ config:
     default: https://skimdb.npmjs.com/registry
 - name: authentication_plugins
   title: "Auth Plugins"
-  description: "Auth plugins"
+  description: "Configure how npm on-site authenticates and authorizes users"
   items:
   - name: authorization
     title: Authorization plugin
@@ -292,6 +292,7 @@ config:
     type: text
     default: 'github'
   - name: authfetch
+    title: Authenticate reads?
     type: select_one
     default: authfetch_yes
     items:
