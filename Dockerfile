@@ -23,7 +23,7 @@ COPY .license.json /etc/npme/.license.json
 COPY .ndmrc /etc/npme/.ndmrc
 RUN npm install ndm -g
 RUN rm -rf /etc/npme/node_modules/@npm
-RUN npme update
+RUN cd /etc/npme; npm install --verbose
 RUN cd /etc/npme; ndm generate --uid=root --gid=root --platform=initd
 
 # Expose ports
