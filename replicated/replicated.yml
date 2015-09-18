@@ -180,7 +180,12 @@ components:
       container_path: /etc/npme/packages
     - host_path: '{{repl ConfigOption "data_host_path" }}'
       container_path: /etc/npme/data
-    support_files: []
+    support_files:
+      - filename: /etc/npme/data/usage.txt
+      - filename: /etc/npme/logs/policy-follower.log
+      - filename: /etc/npme/logs/registry-frontdoor.log
+      - filename: /etc/npme/logs/npm-auth-ws.log
+      - filename: /etc/npme/logs/validate-and-store.log
     support_commands: []
 cmds:
 - name: secret_random
