@@ -53,6 +53,32 @@ components:
   conflicts: []
   cluster: false
   containers:
+  - source: public
+    image_name: redis
+    version: latest
+    restart:
+      policy: on-failure
+      max: 2000
+    cmd: "[\"redis-server\", \"--appendonly\", \"yes\"]"
+    publish_events:
+    - name: Container redis started
+      trigger: container-start
+      data: ""
+      subscriptions:
+      - component: npme
+        container: npme
+        action: start
+    config_files: []
+    customer_files: []
+    env_vars: []
+    ports:
+    - private_port: '6379'
+      public_port: '6379'
+      interface: docker0
+    volumes:
+    - host_path: /usr/local/lib/npme/redis
+      container_path: /data
+    support_files: []
   - source: replicated
     image_name: npme
     version: '[IMAGE_VERSION]'
@@ -149,7 +175,9 @@ components:
               "manage-whitelist": "./bin/package-whitelist.js"
             }
           },
-          "env": {},
+          "env": {
+            "LOGIN_CACHE_REDIS": "redis://{{repl ThisHostInterfaceAddress "docker0" }}:6379/0"
+          },
           "args": {
             "--front-door-host": "{{repl ConfigOption "canonical_url" }}",
             "--white-list-path": "/etc/npme/data/whitelist",
@@ -181,7 +209,8 @@ components:
     - host_path: '{{repl ConfigOption "data_host_path" }}'
       container_path: /etc/npme/data
     support_files:
-      - filename: /etc/npme/data/usage.txt
+      - filename: /etc/npme/node_modules/@npm/registry-frontdoor/data/usage.txt
+      - filename: /var/log/couchdb/couch.log
       - filename: /etc/npme/logs/policy-follower.log
       - filename: /etc/npme/logs/registry-frontdoor.log
       - filename: /etc/npme/logs/npm-auth-ws.log

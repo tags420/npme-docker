@@ -44,5 +44,5 @@ RUN chmod 0644 /etc/cron.d/policy-follower-cron
 # Create the log file to be able to run tail
 RUN touch /var/log/cron.log
 
-# CMD service redis-server start | service nginx start | couchdb | npme restart | tail -f ./logs/*
+# CMD service nginx start | couchdb | npme restart | tail -f ./logs/*
 CMD ["/start.sh"]
