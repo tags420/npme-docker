@@ -176,7 +176,7 @@ components:
             }
           },
           "env": {
-            "LOGIN_CACHE_REDIS": "redis://{{repl ThisHostInterfaceAddress "docker0" }}:6379/0"
+            "LOGIN_CACHE_REDIS": "redis://{{repl ThisHostInterfaceAddress "docker0" }}:6379"
           },
           "args": {
             "--front-door-host": "{{repl ConfigOption "canonical_url" }}",
