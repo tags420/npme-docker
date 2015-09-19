@@ -79,7 +79,7 @@ components:
 
         [couchdb]
         delayed_commits = false
-        database_dir = /etc/npme/couchdb
+        database_dir = /usr/local/var/lib/couchdb
         uuid = 19fb64f5ead46e2f67355775ba34fcbe
 
         [httpd]

@@ -1,2 +1,1 @@
 * * * * * root /usr/bin/npme start >> /var/log/cron.log 2>&1
-* * * * * root curl localhost:5984 || couchdb >> /var/log/cron.log 2>&1

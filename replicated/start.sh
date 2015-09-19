@@ -5,6 +5,6 @@ ndm generate --uid=root --gid=root --platform=initd && service nginx start | npm
 
 cron
 
-/etc/npme/bin/install-couch-app.sh
+bash /etc/npme/bin/install-couch-app.sh
 
 tail -f ./logs/*
