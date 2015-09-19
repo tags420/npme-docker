@@ -119,7 +119,7 @@ components:
       public_port: '5984'
       interface: docker0
     volumes:
-    - host_path: /usr/local/lib/npme/couchdb
+    - host_path: '{{repl ConfigOption "couchdb_host_path" }}'
       container_path: /usr/local/var/lib/couchdb
     support_files: []
   - source: public
@@ -288,8 +288,6 @@ components:
       port_type: tcp
       when: ""
     volumes:
-    - host_path: '{{repl ConfigOption "couchdb_host_path" }}'
-      container_path: /etc/npme/couchdb
     - host_path: '{{repl ConfigOption "packages_host_path" }}'
       container_path: /etc/npme/packages
     - host_path: '{{repl ConfigOption "data_host_path" }}'
