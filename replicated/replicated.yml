@@ -70,7 +70,7 @@ components:
         action: start
     config_files:
     - filename: /usr/local/etc/couchdb/local.ini
-    - contents: |-
+      contents: |-
         ; CouchDB Configuration Settings
 
         ; Custom settings should be made in this file. They will override settings
