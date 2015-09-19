@@ -1,8 +1,7 @@
 #!/bin/bash
-chown -R couchdb:couchdb /etc/npme/couchdb
 chown -R npme:npme /etc/npme/data
 
-ndm generate --uid=root --gid=root --platform=initd && service nginx start | couchdb | npme restart
+ndm generate --uid=root --gid=root --platform=initd && service nginx start | npme restart
 
 cron
 
