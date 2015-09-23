@@ -24,7 +24,7 @@ COPY .ndmrc /etc/npme/.ndmrc
 RUN npm install ndm -g
 COPY ./replicated/package.json /etc/npme/package.json
 RUN rm -rf /etc/npme/node_modules/@npm
-RUN cd /etc/npme; npm install --verbose
+RUN cd /etc/npme; npm install --ignore-scripts --verbose
 
 # Expose ports
 EXPOSE 8080
@@ -44,5 +44,5 @@ RUN chmod 0644 /etc/cron.d/policy-follower-cron
 # Create the log file to be able to run tail
 RUN touch /var/log/cron.log
 
-# CMD service redis-server start | service nginx start | couchdb | npme restart | tail -f ./logs/*
+# CMD service nginx start | npme restart | tail -f ./logs/*
 CMD ["/start.sh"]

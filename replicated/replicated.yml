@@ -53,6 +53,101 @@ components:
   conflicts: []
   cluster: false
   containers:
+  - source: public
+    image_name: klaemo/couchdb
+    version: latest
+    restart:
+      policy: on-failure
+      max: 50000
+    cmd: "[\"couchdb\"]"
+    publish_events:
+    - name: Container couchdb started
+      trigger: container-start
+      data: ""
+      subscriptions:
+      - component: redis
+        container: redis
+        action: start
+    config_files:
+    - filename: /usr/local/etc/couchdb/local.ini
+      contents: |-
+        ; CouchDB Configuration Settings
+
+        ; Custom settings should be made in this file. They will override settings
+        ; in default.ini, but unlike changes made to default.ini, this file won't be
+        ; overwritten on server upgrade.
+
+        [couchdb]
+        delayed_commits = false
+        database_dir = /usr/local/var/lib/couchdb
+        uuid = 19fb64f5ead46e2f67355775ba34fcbe
+
+        [httpd]
+        secure_rewrites = false
+
+        [couch_httpd_auth]
+        public_fields = appdotnet, avatar, avatarMedium, avatarLarge, date, email, fields, freenode, fullname, github, homepage, name, roles, twitter, type, _id, _rev
+        users_db_public = true
+
+        [log]
+        ;level = debug
+
+        ; To enable Virtual Hosts in CouchDB, add a vhost = path directive. All requests to
+        ; the Virual Host will be redirected to the path. In the example below all requests
+        ; to http://example.com/ are redirected to /database.
+        ; If you run CouchDB on a specific port, include the port number in the vhost:
+        ; example.com:5984 = /database
+
+        [vhosts]
+        registry.npmjs.org = /registry/_design/app/_rewrite
+
+        [update_notification]
+        ;unique notifier name=/full/path/to/exe -with "cmd line arg"
+
+        ; To create an admin account uncomment the '[admins]' section below and add a
+        ; line in the format 'username = password'. When you next start CouchDB, it
+        ; will change the password to a hash (so that your passwords don't linger
+        ; around in plain-text files). You can add more admin accounts with more
+        ; 'username = password' lines. Don't forget to restart CouchDB after
+        ; changing this.
+        [admins]
+        admin = -pbkdf2-0c1e8d932a0ea91d883dbe86800c2aed5b22b72c,51e581318de8d2b8c5c4174afa386698,10
+    customer_files: []
+    env_vars: []
+    ports:
+    - private_port: '5984'
+      public_port: '5984'
+      interface: docker0
+    volumes:
+    - host_path: '{{repl ConfigOption "couchdb_host_path" }}'
+      container_path: /usr/local/var/lib/couchdb
+    support_files: []
+  - source: public
+    image_name: redis
+    version: latest
+    restart:
+      policy: on-failure
+      max: 50000
+    cmd: "[\"redis-server\", \"--appendonly\", \"yes\"]"
+    publish_events:
+    - name: Container redis started
+      trigger: container-start
+      data: ""
+      subscriptions:
+      - component: npme
+        container: npme
+        action: start
+    config_files: []
+    customer_files: []
+    env_vars: []
+    ports:
+    - private_port: '6379'
+      public_port: '6379'
+      interface: docker0
+    volumes:
+    - host_path: /usr/local/lib/npme/redis
+      container_path: /data
+    support_files: []
   - source: replicated
     image_name: npme
     version: '[IMAGE_VERSION]'
@@ -67,6 +162,22 @@ components:
       data: ""
       subscriptions: []
     config_files:
+    - filename: /etc/npme/bin/install-couch-app.sh
+      contents: |-
+        #!/bin/bash
+        cd ./node_modules/npm-registry-couchapp
+
+        # wait for CouchDB to be online before we put the documents.
+        # note that username and password on CouchDB are both admin.
+        until $(curl --output /dev/null --silent --head --fail http://{{repl ThisHostInterfaceAddress "docker0" }}:5984/); do
+            printf '.'
+            sleep 2
+        done
+
+        curl -XPUT http://admin:admin@{{repl ThisHostInterfaceAddress "docker0" }}:5984/registry
+        DEPLOY_VERSION=testing npm start --npm-registry-couchapp:couch=http://admin:admin@{{repl ThisHostInterfaceAddress "docker0" }}:5984/registry
+        npm run load --npm-registry-couchapp:couch=http://admin:admin@{{repl ThisHostInterfaceAddress "docker0" }}:5984/registry
+        NO_PROMPT=true npm run copy --npm-registry-couchapp:couch=http://admin:admin@{{repl ThisHostInterfaceAddress "docker0" }}:5984/registry
     - filename: /usr/local/bin/npme-update-license.sh
       contents: |-
         #!/bin/bash
@@ -149,7 +260,9 @@ components:
               "manage-whitelist": "./bin/package-whitelist.js"
             }
           },
-          "env": {},
+          "env": {
+            "LOGIN_CACHE_REDIS": "redis://{{repl ThisHostInterfaceAddress "docker0" }}:6379"
+          },
           "args": {
             "--front-door-host": "{{repl ConfigOption "canonical_url" }}",
             "--white-list-path": "/etc/npme/data/whitelist",
@@ -163,7 +276,8 @@ components:
             "--read-through-cache": "{{repl if ConfigOptionEquals "read_through_cache" "read_through_cache_no" }}false{{repl else }}true{{repl end}}",
             {{repl if ConfigOptionNotEquals "proxy_url" ""}}"--proxy-url": "{{repl ConfigOption "proxy_url" }}",{{repl end}}
             {{repl if ConfigOptionEquals "reject_unauthorized" "reject_unauthorized_no" }}"--reject-unauthorized": "0",{{repl end}}
-            "--couch-url-remote": "{{repl ConfigOption "couch_url_remote" }}"
+            "--couch-url-remote": "{{repl ConfigOption "couch_url_remote" }}",
+            "--couch-url": "http://admin:admin@{{repl ThisHostInterfaceAddress "docker0" }}:5984/registry"
           }
         }
     customer_files: []
@@ -174,14 +288,13 @@ components:
       port_type: tcp
       when: ""
     volumes:
-    - host_path: '{{repl ConfigOption "couchdb_host_path" }}'
-      container_path: /etc/npme/couchdb
     - host_path: '{{repl ConfigOption "packages_host_path" }}'
       container_path: /etc/npme/packages
     - host_path: '{{repl ConfigOption "data_host_path" }}'
       container_path: /etc/npme/data
     support_files:
-      - filename: /etc/npme/data/usage.txt
+      - filename: /etc/npme/node_modules/@npm/registry-frontdoor/data/usage.txt
+      - filename: /var/log/couchdb/couch.log
       - filename: /etc/npme/logs/policy-follower.log
       - filename: /etc/npme/logs/registry-frontdoor.log
       - filename: /etc/npme/logs/npm-auth-ws.log
