@@ -4,17 +4,14 @@ FROM mhart/alpine-node:0.10.40
 # File Author / Maintainer
 MAINTAINER Ben Coe
 
-COPY ./replicated/start.sh /etc/npme/start.sh
+COPY ./replicated/es-follower/start.sh /etc/npme/start.sh
 WORKDIR /etc/npme
 
 RUN echo '@npm:registry=https://enterprise.npmjs.com/' > ~/.npmrc
-RUN npm install npm-registry-couchapp
-RUN npm install @npm/registry-frontdoor
+RUN npm install @npm/registry-follower
 RUN apk update
 RUN apk add curl
 RUN apk add bash
 RUN rm -rf /var/cache/apk/*
-
-EXPOSE 8080
 
 CMD ["/etc/npme/start.sh"]

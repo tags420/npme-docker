@@ -3,7 +3,7 @@ name: npm Enterprise
 version: "[IMAGE_VERSION]"
 release_notes: "remove proxy if not needed, remove reject-unauthorized from config"
 properties:
-  app_url: null
+  app_url: 'http://{{repl ConfigOption "publicip" }}:8081'
   logo_url: "https://s3.amazonaws.com/replicated-vendor-assets/66045325f001a1e0ccde2d457cb2b30b/66045325f001a1e0ccde2d457cb2b30b.png"
   console_title: "npm Enterprise Management Console"
   bypass_local_registry: false
@@ -14,28 +14,28 @@ admin_commands:
   component: npme
   image:
     image_name: npme
-    version: '[IMAGE_VERSION]'
+    version: '1.0.17'
 - alias: reset-follower
-  command: [su, -, root, -c, cd /etc/npme;ndm stop policy-follower;rm ./data/sequence;ndm start policy-follower]
+  command: [sh, /etc/npme/reset-follower.sh]
   run_type: exec
   component: npme
   image:
-    image_name: npme
-    version: '[IMAGE_VERSION]'
+    image_name: policy-follower
+    version: '1.0.9'
 - alias: add-package
-  command: [npme, add-package]
+  command: [sh, /etc/npme/manage-whitelist.sh]
   run_type: exec
   component: npme
   image:
-    image_name: npme
-    version: '[IMAGE_VERSION]'
+    image_name: policy-follower
+    version: '1.0.9'
 - alias: ssh
   run_type: exec
-  command: [/bin/bash]
+  command: [/bin/sh]
   component: npme
   image:
     image_name: npme
-    version: '[IMAGE_VERSION]'
+    version: '1.0.17'
 state:
   ready: null
 backup:
@@ -53,19 +53,170 @@ components:
   conflicts: []
   cluster: false
   containers:
+  - source: replicated
+    image_name: nginx
+    version: '1.0.0'
+    privileged: false
+    restart:
+      policy: on-failure
+      max: 50000
+    publish_events:
+    - name: Container nginx started
+      trigger: container-start
+      data: ""
+      subscriptions: []
+    config_files: []
+    customer_files: []
+    env_vars: []
+    ports:
+    - private_port: '8000'
+      public_port: '8000'
+      interface: docker0
+    volumes:
+    - host_path: '{{repl ConfigOption "packages_host_path" }}'
+      container_path: /etc/npme/packages
+    support_files: []
+  - source: replicated
+    image_name: npm-auth-ws
+    version: '1.0.0'
+    privileged: false
+    restart:
+      policy: on-failure
+      max: 50000
+    publish_events:
+    - name: Container postgres started
+      trigger: container-start
+      data: ""
+      subscriptions: []
+    config_files: []
+    customer_files: []
+    env_vars:
+      - name: FRONT_DOOR_HOST
+        static_val: '{{repl ConfigOption "canonical_url" }}'
+        is_excluded_from_support: true
+      - name: GITHUB_HOST
+        static_val: '{{repl if ConfigOptionEquals "github_type" "github_type_public" }}https://api.github.com{{repl else }}https://{{repl ConfigOption "github_enterprise_host" }}{{repl end }}'
+        is_excluded_from_support: true
+      - name: SHARED_FETCH_SECRET
+        static_val: '{{repl ConfigOption "secret" }}'
+        is_excluded_from_support: true
+      - name: AUTHENTICATION_METHOD
+        static_val: '{{repl ConfigOption "authentication" }}'
+        is_excluded_from_support: true
+      - name: AUTHORIZATION_METHOD
+        static_val: '{{repl ConfigOption "authorization" }}'
+        is_excluded_from_support: true
+      - name: SESSION_HANDLER
+        static_val: '{{repl ConfigOption "session" }}'
+        is_excluded_from_support: true
+      - name: REJECT_UNAUTHORIZED
+        static_val: '{{repl if ConfigOptionEquals "reject_unauthorized" "reject_unauthorized_no" }}0{{repl else }}1{{repl end }}'
+        is_excluded_from_support: true
+      - name: LOGIN_CACHE_REDIS
+        static_val: 'redis://{{repl ThisHostInterfaceAddress "docker0" }}:6379'
+        is_excluded_from_support: true
+    ports:
+    - private_port: '5000'
+      public_port: '5000'
+      interface: docker0
+    volumes:
+    - host_path: '{{repl ConfigOption "data_host_path" }}'
+      container_path: /etc/npme/data
+    support_files: []
+  - source: replicated
+    image_name: validate-and-store
+    version: '1.0.0'
+    privileged: false
+    restart:
+      policy: on-failure
+      max: 50000
+    publish_events:
+    - name: Container validate-and-store started
+      trigger: container-start
+      data: ""
+      subscriptions: []
+    config_files: []
+    customer_files: []
+    env_vars:
+      - name: FRONT_DOOR_HOST
+        static_val: '{{repl ConfigOption "canonical_url" }}'
+        is_excluded_from_support: true
+      - name: REJECT_UNAUTHORIZED
+        static_val: '{{repl if ConfigOptionEquals "reject_unauthorized" "reject_unauthorized_no" }}0{{repl else }}1{{repl end }}'
+        is_excluded_from_support: true
+      - name: COUCH_URL
+        static_val: 'http://admin:admin@{{repl ThisHostInterfaceAddress "docker0" }}:5984/registry'
+        is_excluded_from_support: true
+      - name: BINARY_DIRECTORY
+        static_val: '/etc/npme/packages'
+        is_excluded_from_support: true
+    ports:
+    - private_port: '5001'
+      public_port: '5001'
+      interface: docker0
+    volumes:
+    - host_path: '{{repl ConfigOption "packages_host_path" }}'
+      container_path: /etc/npme/packages
+    support_files: []
+  - source: replicated
+    image_name: policy-follower
+    version: '1.0.9'
+    privileged: false
+    restart:
+      policy: on-failure
+      max: 50000
+    publish_events:
+    - name: Container policy-follower started
+      trigger: container-start
+      data: ""
+      subscriptions: []
+    config_files: []
+    customer_files: []
+    env_vars:
+      - name: FRONT_DOOR_HOST
+        static_val: '{{repl ConfigOption "canonical_url" }}'
+        is_excluded_from_support: true
+      - name: SHARED_FETCH_SECRET
+        static_val: '{{repl ConfigOption "secret" }}'
+        is_excluded_from_support: true
+      - name: REJECT_UNAUTHORIZED
+        static_val: '{{repl if ConfigOptionEquals "reject_unauthorized" "reject_unauthorized_no" }}0{{repl else }}1{{repl end }}'
+        is_excluded_from_support: true
+      - name: COUCH_URL
+        static_val: 'http://admin:admin@{{repl ThisHostInterfaceAddress "docker0" }}:5984/registry'
+        is_excluded_from_support: true
+      - name: COUCH_URL_REMOTE
+        static_val: '{{repl ConfigOption "couch_url_remote" }}'
+        is_excluded_from_support: true
+      - name: SEQ_FILE
+        static_val: '/etc/npme/data/sequence'
+      - name: WHITELIST_PATH
+        static_val: '/etc/npme/data/whitelist'
+        is_excluded_from_support: true
+      - name: VALIDATE_HOST
+        static_val: 'http://{{repl ThisHostInterfaceAddress "docker0" }}:5001'
+        is_excluded_from_support: true
+      - name: PROXY_URL
+        static_val: '{{repl ConfigOption "proxy_url" }}'
+        is_excluded_from_support: true
+    ports: []
+    volumes:
+    - host_path: '{{repl ConfigOption "data_host_path" }}'
+      container_path: /etc/npme/data
+    support_files: []
   - source: public
     image_name: klaemo/couchdb
-    version: latest
+    version: 1.6.1
     restart:
       policy: on-failure
       max: 50000
     cmd: "[\"couchdb\"]"
     publish_events:
-    - name: Container couchdb started
-      trigger: container-start
-      data: ""
+    - name: Container couch started
+      trigger: port-listen
+      data: "5984"
       subscriptions:
-      - component: redis
+      - component: npme
         container: redis
         action: start
     config_files:
@@ -124,7 +275,7 @@ components:
     support_files: []
   - source: public
     image_name: redis
-    version: latest
+    version: 3.0.4
     restart:
       policy: on-failure
       max: 50000
@@ -145,13 +296,38 @@ components:
       public_port: '6379'
       interface: docker0
     volumes:
-    - host_path: /usr/local/lib/npme/redis
+    - host_path: '{{repl ConfigOption "redis_host_path" }}'
+      container_path: /data
+    support_files: []
+  - source: public
+    image_name: getelk/elasticsearch
+    version: 1.5.0-1
+    restart:
+      policy: on-failure
+      max: 50000
+    publish_events:
+    - name: Container elasticsearch started
+      trigger: container-start
+      data: ""
+      subscriptions: []
+    config_files: []
+    customer_files: []
+    env_vars: []
+    ports:
+    - private_port: '9200'
+      public_port: '9200'
+      interface: docker0
+    volumes:
+    - host_path: '{{repl ConfigOption "es_host_path" }}'
       container_path: /data
     support_files: []
   - source: replicated
     image_name: npme
-    version: '[IMAGE_VERSION]'
+    version: '1.0.17'
     privileged: false
+    restart:
+      policy: on-failure
+      max: 50000
     hostname: ""
     cmd: ""
     ephemeral: false
@@ -162,10 +338,10 @@ components:
       data: ""
       subscriptions: []
     config_files:
-    - filename: /etc/npme/bin/install-couch-app.sh
+    - filename: /etc/npme/install-couch-app.sh
       contents: |-
         #!/bin/bash
-        cd ./node_modules/npm-registry-couchapp
+        cd /etc/npme/node_modules/npm-registry-couchapp
 
         # wait for CouchDB to be online before we put the documents.
         # note that username and password on CouchDB are both admin.
@@ -205,61 +381,6 @@ components:
     - filename: /etc/npme/service.json
       contents: |-
         {
-          "npm-auth-ws": {
-            "module": "@npm/npm-auth-ws",
-            "description": "Global npm user auth WS",
-            "scripts": {
-              "start": "./bin/npm-auth-ws.js"
-            },
-            "env": {},
-            "args": {
-              "start": "",
-              "--port": "5000"
-            }
-          },
-          "policy-follower": {
-            "module": "@npm/policy-follower",
-            "description": "Replicates the npm registry",
-            "scripts": {
-              "start": "./bin/policy-follower.js"
-            },
-            "env": {},
-            "args": {
-              "start": "",
-              "--seq-file": "/etc/npme/data/sequence"
-            }
-          },
-          "validate-and-store": {
-            "module": "@npm/validate-and-store",
-            "description": "Validate and store package tarballs/json",
-            "scripts": {
-              "start": "./bin/validate-and-store.js"
-            },
-            "env": {},
-            "args": {
-              "start": ""
-            }
-          },
-          "registry-frontdoor": {
-            "module": "@npm/registry-frontdoor",
-            "description": "Like npm, only inside your firewall",
-            "scripts": {
-              "start": "./bin/registry-frontdoor.js"
-            },
-            "env": {},
-            "args": {
-              "start": "",
-              "--port": "8080",
-              "--host": "0.0.0.0"
-            }
-          },
-          "package-whitelist": {
-            "module": "@npm/package-whitelist",
-            "description": "Like npm, only inside your firewall",
-            "scripts": {
-              "manage-whitelist": "./bin/package-whitelist.js"
-            }
-          },
           "env": {
             "LOGIN_CACHE_REDIS": "redis://{{repl ThisHostInterfaceAddress "docker0" }}:6379"
           },
@@ -269,6 +390,7 @@ components:
             "--github-host": {{repl if ConfigOptionEquals "github_type" "github_type_public" }}"https://api.github.com"{{repl else }}"https://{{repl ConfigOption "github_enterprise_host" }}"{{repl end }},
             "--shared-fetch-secret": "{{repl ConfigOption "secret" }}",
             "--binary-directory": "/etc/npme/packages",
+            "--binaries-host": "http://{{repl ThisHostInterfaceAddress "docker0" }}:8000",
             "--auth-fetch": "{{repl if ConfigOptionEquals "authfetch" "authfetch_no" }}false{{repl else }}true{{repl end}}",
             "--authentication-method": "{{repl ConfigOption "authentication" }}",
             "--authorization-method": "{{repl ConfigOption "authorization" }}",
@@ -277,11 +399,64 @@ components:
             {{repl if ConfigOptionNotEquals "proxy_url" ""}}"--proxy-url": "{{repl ConfigOption "proxy_url" }}",{{repl end}}
             {{repl if ConfigOptionEquals "reject_unauthorized" "reject_unauthorized_no" }}"--reject-unauthorized": "0",{{repl end}}
             "--couch-url-remote": "{{repl ConfigOption "couch_url_remote" }}",
-            "--couch-url": "http://admin:admin@{{repl ThisHostInterfaceAddress "docker0" }}:5984/registry"
+            "--couch-url": "http://admin:admin@{{repl ThisHostInterfaceAddress "docker0" }}:5984/registry",
+            "--auth-host": "http://{{repl ThisHostInterfaceAddress "docker0" }}:5000",
+            "--validate-host": "http://{{repl ThisHostInterfaceAddress "docker0" }}:5001"
           }
         }
     customer_files: []
-    env_vars: []
+    env_vars:
+      - name: FRONT_DOOR_HOST
+        static_val: '{{repl ConfigOption "canonical_url" }}'
+        is_excluded_from_support: true
+      - name: GITHUB_HOST
+        static_val: '{{repl if ConfigOptionEquals "github_type" "github_type_public" }}https://api.github.com{{repl else }}https://{{repl ConfigOption "github_enterprise_host" }}{{repl end }}'
+        is_excluded_from_support: true
+      - name: SHARED_FETCH_SECRET
+        static_val: '{{repl ConfigOption "secret" }}'
+        is_excluded_from_support: true
+      - name: AUTHENTICATION_METHOD
+        static_val: '{{repl ConfigOption "authentication" }}'
+        is_excluded_from_support: true
+      - name: AUTHORIZATION_METHOD
+        static_val: '{{repl ConfigOption "authorization" }}'
+        is_excluded_from_support: true
+      - name: SESSION_HANDLER
+        static_val: '{{repl ConfigOption "session" }}'
+        is_excluded_from_support: true
+      - name: REJECT_UNAUTHORIZED
+        static_val: '{{repl if ConfigOptionEquals "reject_unauthorized" "reject_unauthorized_no" }}0{{repl else }}1{{repl end }}'
+        is_excluded_from_support: true
+      - name: LOGIN_CACHE_REDIS
+        static_val: 'redis://{{repl ThisHostInterfaceAddress "docker0" }}:6379'
+        is_excluded_from_support: true
+      - name: AUTH_HOST
+        static_val: 'http://{{repl ThisHostInterfaceAddress "docker0" }}:5000'
+        is_excluded_from_support: true
+      - name: VALIDATE_HOST
+        static_val: 'http://{{repl ThisHostInterfaceAddress "docker0" }}:5001'
+        is_excluded_from_support: true
+      - name: READ_THROUGH_CACHE
+        static_val: '"{{repl if ConfigOptionEquals "read_through_cache" "read_through_cache_no" }}false{{repl else }}true{{repl end}}'
+        is_excluded_from_support: true
+      - name: PROXY_URL
+        static_val: '{{repl ConfigOption "proxy_url" }}'
+        is_excluded_from_support: true
+      - name: LOGIN_CACHE_REDIS
+        static_val: 'redis://{{repl ThisHostInterfaceAddress "docker0" }}:6379'
+        is_excluded_from_support: true
+      - name: COUCH_URL
+        static_val: 'http://admin:admin@{{repl ThisHostInterfaceAddress "docker0" }}:5984/registry'
+        is_excluded_from_support: true
+      - name: COUCH_URL_REMOTE
+        static_val: '{{repl ConfigOption "couch_url_remote" }}'
+        is_excluded_from_support: true
+      - name: BINARIES_HOST
+        static_val: 'http://{{repl ThisHostInterfaceAddress "docker0" }}:8000'
+        is_excluded_from_support: true
+      - name: AUTH_FETCH
+        static_val: '{{repl if ConfigOptionEquals "authfetch" "authfetch_no" }}false{{repl else }}true{{repl end}}'
+        is_excluded_from_support: true
     ports:
     - private_port: "8080"
       public_port: "8080"
@@ -292,14 +467,212 @@ components:
       container_path: /etc/npme/packages
     - host_path: '{{repl ConfigOption "data_host_path" }}'
       container_path: /etc/npme/data
-    support_files:
-      - filename: /etc/npme/node_modules/@npm/registry-frontdoor/data/usage.txt
-      - filename: /var/log/couchdb/couch.log
-      - filename: /etc/npme/logs/policy-follower.log
-      - filename: /etc/npme/logs/registry-frontdoor.log
-      - filename: /etc/npme/logs/npm-auth-ws.log
-      - filename: /etc/npme/logs/validate-and-store.log
+    support_files: []
     support_commands: []
+  - source: replicated
+    image_name: postgres
+    version: '9.3'
+    privileged: false
+    restart:
+      policy: on-failure
+      max: 50000
+    publish_events:
+    - name: Container postgres started
+      trigger: container-start
+      data: ""
+      subscriptions:
+      - component: npme
+        container: rr
+        action: start
+    config_files: []
+    customer_files: []
+    env_vars: []
+    ports:
+    - private_port: '5432'
+      public_port: '5432'
+      interface: docker0
+    volumes:
+    - host_path: '{{repl ConfigOption "postgres_host_path" }}'
+      container_path: /var/lib/postgresql/data
+    support_files: []
+  - source: replicated
+    image_name: rr
+    version: '1.0.1'
+    privileged: false
+    restart:
+      policy: on-failure
+      max: 50000
+    publish_events:
+    - name: Container postgres started
+      trigger: container-start
+      data: ""
+      subscriptions:
+        - component: npme
+          container: rr-service
+          action: start
+    config_files:
+      - filename: /etc/npme/node_modules/@npm/registry-relational-models/config-development.json
+        contents: |-
+          {
+            "connection": {
+              "driver": "pg",
+              "user": "postgres",
+              "host": "{{repl ThisHostInterfaceAddress "docker0" }}",
+              "database": "registry_relational"
+            },
+            "pool": {
+              "min": 0,
+              "max": 7
+            }
+          }
+      - filename: /etc/npme/node_modules/@npm/relational-registry-follower/config-development.json
+        contents: |-
+          {
+            "connection": {
+              "driver": "pg",
+              "user": "postgres",
+              "host": "{{repl ThisHostInterfaceAddress "docker0" }}",
+              "database": "registry_relational"
+            },
+            "pool": {
+              "min": 0,
+              "max": 7
+            }
+          }
+      - filename: /etc/npme/node_modules/@npm/registry-relational-models/bootstrap.js
+        contents: |-
+          var knex = require('knex')
+          var c = knex({client: 'pg', connection: {driver: 'pg', user: 'postgres', host: '{{repl ThisHostInterfaceAddress "docker0" }}'}})
+          c.raw('CREATE DATABASE registry_relational')
+          .then(function (o) {
+            process.exit(0)
+          })
+          .catch(function (e) {
+            if (e.code === '42P04') process.exit(0)
+            else process.exit(1)
+          })
+    customer_files: []
+    env_vars:
+      - name: DOCKER_ADDR
+        static_val: '{{repl ThisHostInterfaceAddress "docker0" }}'
+        is_excluded_from_support: true
+    ports: []
+    volumes:
+    - host_path: '{{repl ConfigOption "data_host_path" }}'
+      container_path: /etc/npme/data
+    support_files: []
+  - source: replicated
+    image_name: rr-service
+    version: '1.0.0'
+    privileged: false
+    restart:
+      policy: on-failure
+      max: 50000
+    publish_events:
+    - name: Container postgres started
+      trigger: container-start
+      data: ""
+      subscriptions: []
+    config_files:
+      - filename: /etc/npme/node_modules/@npm/registry-relational-service/config-development.json
+        contents: |-
+          {
+            "connection": {
+              "driver": "pg",
+              "user": "postgres",
+              "host": "{{repl ThisHostInterfaceAddress "docker0" }}",
+              "database": "registry_relational"
+            },
+            "pool": {
+              "min": 0,
+              "max": 7
+            }
+          }
+    customer_files: []
+    env_vars: []
+    ports:
+      - private_port: "5005"
+        public_port: "5005"
+        interface: docker0
+    volumes: []
+    support_files: []
+  - source: replicated
+    image_name: newww
+    version: '1.0.1'
+    privileged: false
+    restart:
+      policy: on-failure
+      max: 50000
+    publish_events:
+    - name: Container postgres started
+      trigger: container-start
+      data: ""
+      subscriptions: []
+    config_files:
+      - filename: /etc/npme/node_modules/newww/.env
+        contents: |-
+          CANONICAL_HOST=http://localhost:8081
+          DOWNLOADS_API=https://api.npmjs.org/downloads
+          ELASTICSEARCH_URL=http://{{repl ThisHostInterfaceAddress "docker0" }}:9200/npm
+          HUBSPOT_FORM_NPME_SIGNUP=12345
+          HUBSPOT_FORM_NPME_AGREED_ULA=12345
+          HUBSPOT_FORM_NPME_CONTACT_ME=12345
+          HUBSPOT_FORM_PRIVATE_NPM=12345
+          HUBSPOT_FORM_PRIVATE_NPM_SIGNUP=12345
+          HUBSPOT_PORTAL_ID=12345
+          LICENSE_API=http://127.0.0.1:5004
+          MAIL_ACCESS_KEY_ID=your_AWS_access_key_id
+          MAIL_SECRET_ACCESS_KEY=your_AWS_secret_access_key
+          MAILCHIMP_KEY=12345-us9
+          NPME_PRODUCT_ID=12345
+          REDIS_URL=redis://{{repl ThisHostInterfaceAddress "docker0" }}:6379
+          SESSION_COOKIE=s
+          SESSION_PASSWORD=once_upon_a_time_there_was_a_password
+          SESSION_SALT=put_something_crazy_here_but_maybe_no_weird_chars_please
+          STRIPE_PUBLIC_KEY=pk_test_12345
+          STRIPE_SECRET_KEY=sk_test_12345
+          USE_CACHE=true
+          USER_API=http://{{repl ThisHostInterfaceAddress "docker0" }}:5005
+          ZENDESK_USERNAME=website@example.com
+          ZENDESK_TOKEN=porkchopsandwiches
+          ZENDESK_URI=http://localhost:10911/
+          FEATURE_NPMO=true
+          FEATURE_ACCESS_PAGE=true
+          PORT=8081
+          HOST=0.0.0.0
+    customer_files: []
+    env_vars: []
+    ports:
+      - private_port: "8081"
+        public_port: "8081"
+        port_type: tcp
+        when: ""
+    volumes: []
+    support_files: []
+  - source: replicated
+    image_name: es-follower
+    version: '1.0.3'
+    privileged: false
+    restart:
+      policy: on-failure
+      max: 50000
+    publish_events:
+    - name: Container es-follower started
+      trigger: container-start
+      data: ""
+      subscriptions: []
+    config_files: []
+    customer_files: []
+    env_vars:
+      - name: ES_SERVER
+        static_val: 'http://{{repl ThisHostInterfaceAddress "docker0" }}:9200/npm'
+        is_excluded_from_support: true
+      - name: COUCH_URL
+        static_val: 'http://admin:admin@{{repl ThisHostInterfaceAddress "docker0" }}:5984/registry'
+        is_excluded_from_support: true
+    ports: []
+    volumes: []
+    support_files: []
 cmds:
 - name: secret_random
   cmd: random
@@ -350,6 +723,18 @@ config:
     description: Miscellaneous data files
     type: text
     default: /usr/local/lib/npme/data
+  - name: redis_host_path
+    description: Redis database
+    type: text
+    default: /usr/local/lib/npme/redis
+  - name: es_host_path
+    description: ElasticSearch database
+    type: text
+    default: /usr/local/lib/npme/es
+  - name: postgres_host_path
+    description: Postgres DB data
+    type: text
+    default: /usr/local/lib/npme/postgres
 - name: read_through_cache
   title: Read through cache
   description: Should missing packages be returned from npmjs.com?
