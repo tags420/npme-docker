@@ -47,6 +47,11 @@ monitors:
   - npme,npme
   memory:
   - npme,npme
+identity:
+  enabled: '{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}true{{repl else}}false{{repl end}}'
+  sources:
+  - source: ldap
+    enabled: '{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}true{{repl else}}false{{repl end}}'
 components:
 - name: npme
   tags: []
@@ -95,19 +100,19 @@ components:
         static_val: '{{repl ConfigOption "canonical_url" }}'
         is_excluded_from_support: true
       - name: GITHUB_HOST
-        static_val: '{{repl if ConfigOptionEquals "github_type" "github_type_public" }}https://api.github.com{{repl else }}https://{{repl ConfigOption "github_enterprise_host" }}{{repl end }}'
+        static_val: '{{repl if ConfigOptionEquals "github_type" "github_type_public" }}https://api.github.com{{repl else }}{{repl if ConfigOptionEquals "github_enterprise_protocol" "github_enterprise_protocol_https"}}https{{repl else}}http{{repl end}}://{{repl ConfigOption "github_enterprise_host" }}{{repl end}}'
         is_excluded_from_support: true
       - name: SHARED_FETCH_SECRET
         static_val: '{{repl ConfigOption "secret" }}'
         is_excluded_from_support: true
       - name: AUTHENTICATION_METHOD
-        static_val: '{{repl ConfigOption "authentication" }}'
+        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl ConfigOption "authentication" }}{{repl end}}{{repl end}}{{repl end}}'
         is_excluded_from_support: true
       - name: AUTHORIZATION_METHOD
-        static_val: '{{repl ConfigOption "authorization" }}'
+        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl ConfigOption "authorization" }}{{repl end}}{{repl end}}{{repl end}}'
         is_excluded_from_support: true
       - name: SESSION_HANDLER
-        static_val: '{{repl ConfigOption "session" }}'
+        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}redis{{repl else}}{{repl ConfigOption "session" }}{{repl end}}{{repl end}}{{repl end}}'
         is_excluded_from_support: true
       - name: REJECT_UNAUTHORIZED
         static_val: '{{repl if ConfigOptionEquals "reject_unauthorized" "reject_unauthorized_no" }}0{{repl else }}1{{repl end }}'
@@ -410,19 +415,19 @@ components:
         static_val: '{{repl ConfigOption "canonical_url" }}'
         is_excluded_from_support: true
       - name: GITHUB_HOST
-        static_val: '{{repl if ConfigOptionEquals "github_type" "github_type_public" }}https://api.github.com{{repl else }}https://{{repl ConfigOption "github_enterprise_host" }}{{repl end }}'
+        static_val: '{{repl if ConfigOptionEquals "github_type" "github_type_public" }}https://api.github.com{{repl else }}{{repl if ConfigOptionEquals "github_enterprise_protocol" "github_enterprise_protocol_https"}}https{{repl else}}http{{repl end}}://{{repl ConfigOption "github_enterprise_host" }}{{repl end}}'
         is_excluded_from_support: true
       - name: SHARED_FETCH_SECRET
         static_val: '{{repl ConfigOption "secret" }}'
         is_excluded_from_support: true
       - name: AUTHENTICATION_METHOD
-        static_val: '{{repl ConfigOption "authentication" }}'
+        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl ConfigOption "authentication" }}{{repl end}}{{repl end}}{{repl end}}'
         is_excluded_from_support: true
       - name: AUTHORIZATION_METHOD
-        static_val: '{{repl ConfigOption "authorization" }}'
+        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl ConfigOption "authorization" }}{{repl end}}{{repl end}}{{repl end}}'
         is_excluded_from_support: true
       - name: SESSION_HANDLER
-        static_val: '{{repl ConfigOption "session" }}'
+        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}redis{{repl else}}{{repl ConfigOption "session" }}{{repl end}}{{repl end}}{{repl end}}'
         is_excluded_from_support: true
       - name: REJECT_UNAUTHORIZED
         static_val: '{{repl if ConfigOptionEquals "reject_unauthorized" "reject_unauthorized_no" }}0{{repl else }}1{{repl end }}'
@@ -778,22 +783,6 @@ config:
   - name: couch_url_remote
     type: text
     default: https://skimdb.npmjs.com/registry
-- name: authentication_plugins
-  title: "Auth plugins"
-  description: "Configure how npm on-site authenticates and authorizes users"
-  items:
-  - name: authorization
-    title: Authorization plugin
-    type: text
-    default: 'github'
-  - name: authentication
-    title: Authentication plugin
-    type: text
-    default: 'github'
-  - name: session
-    title: Session plugin
-    type: text
-    default: 'github'
 - name: authfetch
   title: Auth reads
   description: Should npm installs require an token?
@@ -812,9 +801,26 @@ config:
       type: text
       affix: right
       required: false
+- name: auth
+  title: Authentication
+  description: How should we authenticate users?
+  items:
+  - name: auth_source
+    default: auth_type_open
+    type: select_one
+    items:
+    - name: auth_type_github
+      title: GitHub
+    - name: auth_type_ldap
+      title: LDAP
+    - name: auth_type_open
+      title: Open
+    - name: auth_type_custom
+      title: Custom
 - name: github
+  when: auth_source=auth_type_github
   title: Github integration
-  description: Provide the location of your Github account
+  description: Configure npm On-Site to authenticate against a GitHub server
   items:
   - name: github_type
     default: github_type_public
@@ -856,3 +862,100 @@ config:
       recommended: true
       type: text
       required: false
+- name: ldap_settings
+  title: LDAP Server Settings
+  when: auth_source=auth_type_ldap
+  items:
+  - name: ldap_type
+    title: LDAP Server Type
+    type: select_one
+    default: ldap_type_openldap
+    items:
+    - name: ldap_type_openldap
+      title: OpenLDAP
+    - name: ldap_type_ad
+      title: Active Directory
+    - name: ldap_type_other
+      title: Other
+  - name: ldap_hostname
+    title: Hostname
+    type: text
+    value: '{{repl LdapCopyAuthFrom "Hostname"}}'
+    required: yes
+  - name: ldap_port
+    title: Port
+    type: text
+    value: '{{repl LdapCopyAuthFrom "Port"}}'
+    default: 389
+    required: true
+  - name: label_encryption_label
+    title: Encryption Type
+  - name: ldap_encryption
+    type: select_one
+    default: ldap_encryption_plain
+    items:
+    - name: ldap_encryption_plain
+      title: Plain
+    - name: ldap_encryption_starttls
+      title: StartTLS
+    - name: ldap_encryption_ldaps
+      title: LDAPS
+  - name: ldap_search_user
+    title: Search user
+    type: text
+    value: '{{repl LdapCopyAuthFrom "SearchUsername"}}'
+    required: true
+  - name: ldap_search_password
+    title: Search password
+    type: password
+    value: '{{repl LdapCopyAuthFrom "SearchPassword"}}'
+    required: true
+  - name: ldap_schema
+    type: heading
+    title: LDAP schema
+  - name: ldap_base_dn
+    title: Base DN
+    type: text
+    value: '{{repl LdapCopyAuthFrom "BaseDN"}}'
+    required: yes
+  - name: ldap_usersearch_dn
+    title: User search DN
+    type: text
+    value: '{{repl LdapCopyAuthFrom "UserSearchDN"}}'
+    default: ou=users
+    required: true
+  - name: ldap_restricted_user_group
+    title: Restricted User Group
+    type: text
+    value: '{{repl LdapCopyAuthFrom "RestrictedGroupCNs"}}'
+    required: true
+  - name: ldap_username_field
+    title: Username field
+    type: text
+    value: '{{repl LdapCopyAuthFrom "FieldUsername"}}'
+    default: uid
+    required: true
+- name: open
+  when: auth_source=auth_type_open
+  title: Open Access
+  items:
+    - name: open_warning
+      type: label
+      value: Login with any username and password. Only use this setting if you are behind a firewall.
+- name: custom
+  when: auth_source=auth_type_custom
+  title: Custom Authentication
+  description: Configure a custom auth strategy. Install your module in /usr/local/lib/npme/data on the host machine. The module will be available at /etc/npme/data inside your container.
+  items:
+  - name: authorization
+    title: Authorization plugin
+    type: text
+    default: 'github'
+  - name: authentication
+    title: Authentication plugin
+    type: text
+    default: 'github'
+  - name: session
+    title: Session plugin
+    type: text
+    default: 'github'
