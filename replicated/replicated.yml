@@ -806,7 +806,7 @@ config:
   description: How should we authenticate users?
   items:
   - name: auth_source
-    default: auth_type_open
+    default: auth_type_github
     type: select_one
     items:
     - name: auth_type_github
