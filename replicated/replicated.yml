@@ -83,7 +83,7 @@ components:
     support_files: []
   - source: replicated
     image_name: npm-auth-ws
-    version: '1.0.1'
+    version: '1.0.2'
     privileged: false
     restart:
       policy: on-failure
