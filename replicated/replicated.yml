@@ -472,7 +472,8 @@ components:
       container_path: /etc/npme/packages
     - host_path: '{{repl ConfigOption "data_host_path" }}'
       container_path: /etc/npme/data
-    support_files: []
+    support_files:
+      - /etc/npme/node_modules/@npm/registry-frontdoor/data/usage.txt
     support_commands: []
   - source: replicated
     image_name: postgres
