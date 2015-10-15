@@ -21,14 +21,14 @@ admin_commands:
   component: npme
   image:
     image_name: policy-follower
-    version: '1.0.11'
+    version: '1.0.12'
 - alias: add-package
   command: [sh, /etc/npme/manage-whitelist.sh]
   run_type: exec
   component: npme
   image:
     image_name: policy-follower
-    version: '1.0.11'
+    version: '1.0.12'
 - alias: ssh
   run_type: exec
   command: [/bin/sh]
@@ -165,7 +165,7 @@ components:
     support_files: []
   - source: replicated
     image_name: policy-follower
-    version: '1.0.11'
+    version: '1.0.12'
     privileged: false
     restart:
       policy: on-failure
