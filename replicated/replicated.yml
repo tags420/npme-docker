@@ -21,14 +21,14 @@ admin_commands:
   component: npme
   image:
     image_name: policy-follower
-    version: '1.0.10'
+    version: '1.0.11'
 - alias: add-package
   command: [sh, /etc/npme/manage-whitelist.sh]
   run_type: exec
   component: npme
   image:
     image_name: policy-follower
-    version: '1.0.10'
+    version: '1.0.11'
 - alias: ssh
   run_type: exec
   command: [/bin/sh]
@@ -165,7 +165,7 @@ components:
     support_files: []
   - source: replicated
     image_name: policy-follower
-    version: '1.0.10'
+    version: '1.0.11'
     privileged: false
     restart:
       policy: on-failure
@@ -189,6 +189,9 @@ components:
         is_excluded_from_support: true
       - name: COUCH_URL_REMOTE
         static_val: '{{repl ConfigOption "couch_url_remote" }}'
+        is_excluded_from_support: true
+      - name: POLICY
+        static_val: '{{repl ConfigOption "remote_policy" }}'
         is_excluded_from_support: true
       - name: SEND_SHARED_FETCH_SECRET
         static_val: '{{repl if ConfigOptionEquals "remote_shared_fetch_secret" ""}}{{repl else }}true{{repl end }}'
@@ -797,6 +800,10 @@ config:
     title: upstream secret (only required for replicating from upstream npm On-Site servers)
     type: text
     default: ''
+  - name: remote_policy
+    title: policy to apply during replication (set to mirror to create a true replica).
+    type: text
+    default: 'white-list'
 - name: authfetch
   title: Auth reads
   description: Should npm installs require an token?
