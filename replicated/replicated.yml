@@ -789,8 +789,8 @@ config:
       affix: right
       required: false
 - name: couch_url_remote
-  title: Upstream couchdb
-  description: Which upstream couchdb should we replicate from?
+  title: Upstream registry
+  description: Which upstream registry should we replicate from?
   items:
   - name: couch_url_remote
     type: text
