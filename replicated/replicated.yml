@@ -191,7 +191,7 @@ components:
         static_val: '{{repl ConfigOption "couch_url_remote" }}'
         is_excluded_from_support: true
       - name: SEND_SHARED_FETCH_SECRET
-        static_val: '{{repl if ConfigOptionEquals "remote_shared_fetch_secret" ""}}false{{repl else }}true{{repl end }}'
+        static_val: '{{repl if ConfigOptionEquals "remote_shared_fetch_secret" ""}}{{repl else }}true{{repl end }}'
         is_excluded_from_support: true
       - name: SHARED_FETCH_SECRET
         static_val: '{{repl ConfigOption "remote_shared_fetch_secret" }}'
@@ -791,8 +791,10 @@ config:
   items:
   - name: couch_url_remote
     type: text
+    title: upstream url
     default: https://skimdb.npmjs.com/registry
   - name: remote_shared_fetch_secret
+    title: upstream secret (only required for replicating from upstream npm On-Site servers)
     type: text
     default: ''
 - name: authfetch
