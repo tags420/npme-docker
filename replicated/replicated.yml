@@ -620,6 +620,7 @@ components:
     config_files:
       - filename: /etc/npme/node_modules/newww/.env
         contents: |-
+          NPMO_COBRAND='{{repl ConfigOption "branding" }}'
           CANONICAL_HOST=http://localhost:8081
           DOWNLOADS_API=https://api.npmjs.org/downloads
           ELASTICSEARCH_URL=http://{{repl ThisHostInterfaceAddress "docker0" }}:9200/npm
@@ -700,6 +701,10 @@ config:
     title: Full URL of npm Enterprise host
     type: text
     value: http://{{repl ConfigOption "publicip" }}:8080
+  - name: branding
+    title: Your company name
+    type: text
+    default: 'FakeCorp'
   - name: publicip
     type: text
     hidden: true
