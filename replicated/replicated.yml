@@ -14,28 +14,28 @@ admin_commands:
   component: npme
   image:
     image_name: npme
-    version: '1.0.17'
+    version: '1.0.18'
 - alias: reset-follower
   command: [sh, /etc/npme/reset-follower.sh]
   run_type: exec
   component: npme
   image:
     image_name: policy-follower
-    version: '1.0.9'
+    version: '1.0.10'
 - alias: add-package
   command: [sh, /etc/npme/manage-whitelist.sh]
   run_type: exec
   component: npme
   image:
     image_name: policy-follower
-    version: '1.0.9'
+    version: '1.0.10'
 - alias: ssh
   run_type: exec
   command: [/bin/sh]
   component: npme
   image:
     image_name: npme
-    version: '1.0.17'
+    version: '1.0.18'
 state:
   ready: null
 backup:
@@ -165,7 +165,7 @@ components:
     support_files: []
   - source: replicated
     image_name: policy-follower
-    version: '1.0.9'
+    version: '1.0.10'
     privileged: false
     restart:
       policy: on-failure
@@ -181,9 +181,6 @@ components:
       - name: FRONT_DOOR_HOST
         static_val: '{{repl ConfigOption "canonical_url" }}'
         is_excluded_from_support: true
-      - name: SHARED_FETCH_SECRET
-        static_val: '{{repl ConfigOption "secret" }}'
-        is_excluded_from_support: true
       - name: REJECT_UNAUTHORIZED
         static_val: '{{repl if ConfigOptionEquals "reject_unauthorized" "reject_unauthorized_no" }}0{{repl else }}1{{repl end }}'
         is_excluded_from_support: true
@@ -192,6 +189,12 @@ components:
         is_excluded_from_support: true
       - name: COUCH_URL_REMOTE
         static_val: '{{repl ConfigOption "couch_url_remote" }}'
+        is_excluded_from_support: true
+      - name: SEND_SHARED_FETCH_SECRET
+        static_val: '{{repl if ConfigOptionEquals "remote_shared_fetch_secret" ""}}false{{repl else }}true{{repl end }}'
+        is_excluded_from_support: true
+      - name: SHARED_FETCH_SECRET
+        static_val: '{{repl ConfigOption "remote_shared_fetch_secret" }}'
         is_excluded_from_support: true
       - name: SEQ_FILE
         static_val: '/etc/npme/data/sequence'
@@ -328,7 +331,7 @@ components:
     support_files: []
   - source: replicated
     image_name: npme
-    version: '1.0.17'
+    version: '1.0.18'
     privileged: false
     restart:
       policy: on-failure
@@ -604,7 +607,7 @@ components:
     support_files: []
   - source: replicated
     image_name: newww
-    version: '1.0.1'
+    version: '1.0.2'
     privileged: false
     restart:
       policy: on-failure
@@ -784,6 +787,9 @@ config:
   - name: couch_url_remote
     type: text
     default: https://skimdb.npmjs.com/registry
+  - name: remote_shared_fetch_secret
+    type: text
+    default: ''
 - name: authfetch
   title: Auth reads
   description: Should npm installs require an token?
