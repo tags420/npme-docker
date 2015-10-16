@@ -14,7 +14,7 @@ admin_commands:
   component: npme
   image:
     image_name: npme
-    version: '1.0.19'
+    version: '1.0.20'
 - alias: reset-follower
   command: [sh, /etc/npme/reset-follower.sh]
   run_type: exec
@@ -35,7 +35,7 @@ admin_commands:
   component: npme
   image:
     image_name: npme
-    version: '1.0.19'
+    version: '1.0.20'
 state:
   ready: null
 backup:
@@ -334,7 +334,7 @@ components:
     support_files: []
   - source: replicated
     image_name: npme
-    version: '1.0.19'
+    version: '1.0.20'
     privileged: false
     restart:
       policy: on-failure
@@ -461,6 +461,9 @@ components:
         is_excluded_from_support: true
       - name: COUCH_URL_REMOTE
         static_val: '{{repl ConfigOption "couch_url_remote" }}'
+        is_excluded_from_support: true
+      - name: BINARY_DIRECTORY
+        static_val: '/etc/npme/packages'
         is_excluded_from_support: true
       - name: BINARIES_HOST
         static_val: 'http://{{repl ThisHostInterfaceAddress "docker0" }}:8000'
