@@ -448,7 +448,7 @@ components:
         static_val: 'http://{{repl ThisHostInterfaceAddress "docker0" }}:5001'
         is_excluded_from_support: true
       - name: READ_THROUGH_CACHE
-        static_val: '"{{repl if ConfigOptionEquals "read_through_cache" "read_through_cache_no" }}false{{repl else }}true{{repl end}}'
+        static_val: '{{repl if ConfigOptionEquals "read_through_cache" "read_through_cache_no" }}false{{repl else }}true{{repl end}}'
         is_excluded_from_support: true
       - name: PROXY_URL
         static_val: '{{repl ConfigOption "proxy_url" }}'
