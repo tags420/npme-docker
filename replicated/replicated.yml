@@ -83,7 +83,7 @@ components:
     support_files: []
   - source: replicated
     image_name: npm-auth-ws
-    version: '1.0.4'
+    version: '1.0.6'
     privileged: false
     restart:
       policy: on-failure
@@ -98,6 +98,9 @@ components:
     env_vars:
       - name: FRONT_DOOR_HOST
         static_val: '{{repl ConfigOption "canonical_url" }}'
+        is_excluded_from_support: true
+      - name: GITHUB_ORG
+        static_val: '{{repl ConfigOption "github_org" }}'
         is_excluded_from_support: true
       - name: GITHUB_HOST
         static_val: '{{repl if ConfigOptionEquals "github_type" "github_type_public" }}https://api.github.com{{repl else }}{{repl if ConfigOptionEquals "github_enterprise_protocol" "github_enterprise_protocol_https"}}https{{repl else}}http{{repl end}}://{{repl ConfigOption "github_enterprise_host" }}{{repl end}}'
@@ -850,6 +853,10 @@ config:
   title: Github integration
   description: Configure npm On-Site to authenticate against a GitHub server
   items:
+  - name: github_org
+    title: Github Organization (optionally lock down publishes to a single GitHub organization)
+    default: ''
+    type: text
   - name: github_type
     default: github_type_public
     type: select_one
