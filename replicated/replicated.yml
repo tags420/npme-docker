@@ -3,7 +3,7 @@ name: npm Enterprise
 version: "[IMAGE_VERSION]"
 release_notes: "remove proxy if not needed, remove reject-unauthorized from config"
 properties:
-  app_url: 'http://{{repl ConfigOption "publicip" }}:8081'
+  app_url: '{{repl ConfigOption "website_url" }}'
   logo_url: "https://s3.amazonaws.com/replicated-vendor-assets/66045325f001a1e0ccde2d457cb2b30b/66045325f001a1e0ccde2d457cb2b30b.png"
   console_title: "npm Enterprise Management Console"
   bypass_local_registry: false
@@ -704,9 +704,13 @@ config:
   description: "Configure your npm Enterprise installation"
   items:
   - name: canonical_url
-    title: Full URL of npm Enterprise host
+    title: Full URL of npm Enterprise registry (8080 must stay constant, you may optionaly change the IP to a pretty host name)
     type: text
     value: http://{{repl ConfigOption "publicip" }}:8080
+  - name: website_url
+    title: Full URL of npm Enterprise website (8081 must stay constant, you may optionaly change the IP to a pretty host name)
+    type: text
+    value: http://{{repl ConfigOption "publicip" }}:8081
   - name: branding
     title: Your company name
     type: text
