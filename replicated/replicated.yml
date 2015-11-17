@@ -474,6 +474,9 @@ components:
       - name: AUTH_FETCH
         static_val: '{{repl if ConfigOptionEquals "authfetch" "authfetch_no" }}false{{repl else }}true{{repl end}}'
         is_excluded_from_support: true
+      - name: WHITELIST_PATH
+        static_val: '/etc/npme/data/whitelist'
+        is_excluded_from_support: true
     ports:
     - private_port: "8080"
       public_port: "8080"
