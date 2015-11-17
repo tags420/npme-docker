@@ -337,7 +337,7 @@ components:
     support_files: []
   - source: replicated
     image_name: npme
-    version: '1.0.21'
+    version: '1.0.22'
     privileged: false
     restart:
       policy: on-failure
@@ -473,6 +473,9 @@ components:
         is_excluded_from_support: true
       - name: AUTH_FETCH
         static_val: '{{repl if ConfigOptionEquals "authfetch" "authfetch_no" }}false{{repl else }}true{{repl end}}'
+        is_excluded_from_support: true
+      - name: WHITELIST_PATH
+        static_val: '/etc/npme/data/whitelist'
         is_excluded_from_support: true
     ports:
     - private_port: "8080"
