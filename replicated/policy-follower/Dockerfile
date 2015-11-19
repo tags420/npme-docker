@@ -5,7 +5,8 @@ FROM mhart/alpine-node:0.10.40
 MAINTAINER Ben Coe
 
 COPY ./replicated/policy-follower/start.sh /etc/npme/start.sh
-COPY ./replicated/policy-follower/manage-whitelist.sh /etc/npme/manage-whitelist.sh
+COPY ./replicated/policy-follower/add-package.sh /etc/npme/add-package.sh
+COPY ./replicated/policy-follower/remove-package.sh /etc/npme/remove-package.sh
 COPY ./replicated/policy-follower/reset-follower.sh /etc/npme/reset-follower.sh
 WORKDIR /etc/npme
 
