@@ -14,7 +14,7 @@ admin_commands:
   component: npme
   image:
     image_name: npme
-    version: '1.0.21'
+    version: '1.0.22'
 - alias: reset-follower
   command: [sh, /etc/npme/reset-follower.sh]
   run_type: exec
@@ -42,7 +42,7 @@ admin_commands:
   component: npme
   image:
     image_name: npme
-    version: '1.0.21'
+    version: '1.0.22'
 state:
   ready: null
 backup:
