@@ -728,27 +728,27 @@ config:
   description: Configure the location of persistent npm Enterprise storage
   items:
   - name: couchdb_host_path
-    description: CouchDb storage path on host
+    title: CouchDB storage path on host
     type: text
     default: /usr/local/lib/npme/couchdb
   - name: packages_host_path
-    description: Package storage path on host
+    title: Package storage path on host
     type: text
     default: /usr/local/lib/npme/packages
   - name: data_host_path
-    description: Miscellaneous data files
+    title: Miscellaneous data files
     type: text
     default: /usr/local/lib/npme/data
   - name: redis_host_path
-    description: Redis database
+    title: Redis database
     type: text
     default: /usr/local/lib/npme/redis
   - name: es_host_path
-    description: ElasticSearch database
+    title: ElasticSearch database
     type: text
     default: /usr/local/lib/npme/es
   - name: postgres_host_path
-    description: Postgres DB data
+    title: Postgres DB data
     type: text
     default: /usr/local/lib/npme/postgres
 - name: read_through_cache
