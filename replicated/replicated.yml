@@ -14,7 +14,7 @@ admin_commands:
   component: npme
   image:
     image_name: npme
-    version: '1.0.22'
+    version: '1.0.24'
 - alias: reset-follower
   command: [sh, /etc/npme/reset-follower.sh]
   run_type: exec
@@ -42,7 +42,7 @@ admin_commands:
   component: npme
   image:
     image_name: npme
-    version: '1.0.22'
+    version: '1.0.24'
 state:
   ready: null
 backup:
@@ -349,7 +349,7 @@ components:
     support_files: []
   - source: replicated
     image_name: npme
-    version: '1.0.22'
+    version: '1.0.24'
     privileged: false
     restart:
       policy: on-failure
@@ -459,6 +459,9 @@ components:
         is_excluded_from_support: true
       - name: AUTH_FETCH
         static_val: '{{repl if ConfigOptionEquals "authfetch" "authfetch_no" }}false{{repl else }}true{{repl end}}'
+        is_excluded_from_support: true
+      - name: SCOPED_SEARCH
+        static_val: '{{repl if ConfigOptionEquals "scoped_search" "scoped_search_no" }}{{repl else }}true{{repl end}}'
         is_excluded_from_support: true
       - name: WHITELIST_PATH
         static_val: '/etc/npme/data/whitelist'
@@ -723,6 +726,24 @@ config:
     title: Proxy URL
     type: text
     required: false
+  - name: scoped_search
+    title: Scoped CLI Search
+    description: Should npm search be enabled for scoped modules?
+    items:
+    - name: scoped_search
+      type: select_one
+      default: scoped_search_yes
+      items:
+      - name: scoped_search_no
+        title: No
+        type: text
+        affix: left
+        required: false
+      - name: scoped_search_yes
+        title: Yes
+        type: text
+        affix: right
+        required: false
 - name: storage
   title: Storage
   description: Configure the location of persistent npm On-Site storage
