@@ -793,14 +793,14 @@ config:
   items:
   - name: couch_url_remote
     type: text
-    title: upstream url
+    title: Upstream URL
     default: https://skimdb.npmjs.com/registry
   - name: remote_shared_fetch_secret
-    title: upstream secret (only required for replicating from upstream npm On-Site servers)
+    title: Upstream secret (only required for replicating from upstream npm On-Site servers)
     type: text
     default: ''
   - name: remote_policy
-    title: policy to apply during replication (set to mirror to create a true replica).
+    title: Policy to apply during replication (set to mirror to create a true replica).
     type: text
     default: 'white-list'
 - name: authfetch
