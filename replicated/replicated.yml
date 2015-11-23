@@ -839,7 +839,7 @@ config:
       title: Custom
 - name: github
   when: auth_source=auth_type_github
-  title: Github integration
+  title: GitHub Integration
   description: Configure npm On-Site to authenticate against a GitHub server
   items:
   - name: github_org
@@ -851,23 +851,23 @@ config:
     type: select_one
     items:
     - name: github_type_public
-      title: Github.com
+      title: github.com
       type: text
       required: false
     - name: github_type_enterprise
-      title: Github Enterprise
+      title: GitHub Enterprise
       type: text
       required: false
   - name: github_enterprise_host
-    title: Github Enterprise Host
-    description: The hostname of your Github Enterprise server
+    title: GitHub Enterprise Host
+    description: The hostname of your GitHub Enterprise server
     recommended: false
     when: github_type=github_type_enterprise
     type: text
     required: true
   - name: github_enterprise_protocol
-    title: Github Enterprise Host
-    description: The hostname of your Github Enterprise server
+    title: GitHub Enterprise Host
+    description: The hostname of your GitHub Enterprise server
     recommended: false
     when: github_type=github_type_enterprise
     type: select_one
