@@ -805,7 +805,7 @@ config:
     default: 'white-list'
 - name: authfetch
   title: Auth reads
-  description: Should npm installs require an token?
+  description: Should npm installs require a token?
   items:
   - name: authfetch
     type: select_one
