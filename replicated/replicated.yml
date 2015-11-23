@@ -734,12 +734,12 @@ config:
       type: select_one
       default: scoped_search_yes
       items:
-      - name: scoped_search
+      - name: scoped_search_no
         title: No
         type: text
         affix: left
         required: false
-      - name: scoped_search
+      - name: scoped_search_yes
         title: Yes
         type: text
         affix: right
