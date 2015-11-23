@@ -461,7 +461,7 @@ components:
         static_val: '{{repl if ConfigOptionEquals "authfetch" "authfetch_no" }}false{{repl else }}true{{repl end}}'
         is_excluded_from_support: true
       - name: SCOPED_SEARCH
-        static_val: '{{repl if ConfigOptionEquals "scoped_search" "scoped_search_no" }}false{{repl else }}true{{repl end}}'
+        static_val: '{{repl if ConfigOptionEquals "scoped_search" "scoped_search_no" }}{{repl else }}true{{repl end}}'
         is_excluded_from_support: true
       - name: WHITELIST_PATH
         static_val: '/etc/npme/data/whitelist'
