@@ -696,11 +696,11 @@ config:
   description: "Configure your npm Enterprise installation"
   items:
   - name: canonical_url
-    title: Full URL of npm Enterprise registry (8080 must stay constant, you may optionaly change the IP to a pretty host name)
+    title: Full URL of npm Enterprise registry (8080 must stay constant, you may optionally change the IP to a pretty host name)
     type: text
     value: http://{{repl ConfigOption "publicip" }}:8080
   - name: website_url
-    title: Full URL of npm Enterprise website (8081 must stay constant, you may optionaly change the IP to a pretty host name)
+    title: Full URL of npm Enterprise website (8081 must stay constant, you may optionally change the IP to a pretty host name)
     type: text
     value: http://{{repl ConfigOption "publicip" }}:8081
   - name: branding
