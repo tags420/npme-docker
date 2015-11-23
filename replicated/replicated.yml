@@ -5,7 +5,7 @@ release_notes: "remove proxy if not needed, remove reject-unauthorized from conf
 properties:
   app_url: '{{repl ConfigOption "website_url" }}'
   logo_url: "https://s3.amazonaws.com/replicated-vendor-assets/66045325f001a1e0ccde2d457cb2b30b/66045325f001a1e0ccde2d457cb2b30b.png"
-  console_title: "npm Enterprise Management Console"
+  console_title: "npm On-Site Management Console"
   bypass_local_registry: false
 admin_commands:
 - alias: update-license
@@ -693,14 +693,14 @@ cmds:
 config:
 - name: General
   title: "General"
-  description: "Configure your npm Enterprise installation"
+  description: "Configure your npm On-Site installation"
   items:
   - name: canonical_url
-    title: Full URL of npm Enterprise registry (8080 must stay constant, you may optionaly change the IP to a pretty host name)
+    title: Full URL of npm On-Site registry (8080 must stay constant, you may optionally change the IP to a pretty host name)
     type: text
     value: http://{{repl ConfigOption "publicip" }}:8080
   - name: website_url
-    title: Full URL of npm Enterprise website (8081 must stay constant, you may optionaly change the IP to a pretty host name)
+    title: Full URL of npm On-Site website (8081 must stay constant, you may optionally change the IP to a pretty host name)
     type: text
     value: http://{{repl ConfigOption "publicip" }}:8081
   - name: branding
@@ -725,30 +725,30 @@ config:
     required: false
 - name: storage
   title: Storage
-  description: Configure the location of persistent npm Enterprise storage
+  description: Configure the location of persistent npm On-Site storage
   items:
   - name: couchdb_host_path
-    description: CouchDb storage path on host
+    title: CouchDB storage path on host
     type: text
     default: /usr/local/lib/npme/couchdb
   - name: packages_host_path
-    description: Package storage path on host
+    title: Package storage path on host
     type: text
     default: /usr/local/lib/npme/packages
   - name: data_host_path
-    description: Miscellaneous data files
+    title: Miscellaneous data files
     type: text
     default: /usr/local/lib/npme/data
   - name: redis_host_path
-    description: Redis database
+    title: Redis database
     type: text
     default: /usr/local/lib/npme/redis
   - name: es_host_path
-    description: ElasticSearch database
+    title: ElasticSearch database
     type: text
     default: /usr/local/lib/npme/es
   - name: postgres_host_path
-    description: Postgres DB data
+    title: Postgres DB data
     type: text
     default: /usr/local/lib/npme/postgres
 - name: read_through_cache
@@ -771,7 +771,7 @@ config:
       required: false
 - name: reject_unauthorized
   title: Reject unauthorized
-  description: Should npm on-site apply strict SSL checks?
+  description: Should npm On-Site apply strict SSL checks?
   items:
   - name: reject_unauthorized
     type: select_one
@@ -793,19 +793,19 @@ config:
   items:
   - name: couch_url_remote
     type: text
-    title: upstream url
+    title: Upstream URL
     default: https://skimdb.npmjs.com/registry
   - name: remote_shared_fetch_secret
-    title: upstream secret (only required for replicating from upstream npm On-Site servers)
+    title: Upstream secret (only required for replicating from upstream npm On-Site servers)
     type: text
     default: ''
   - name: remote_policy
-    title: policy to apply during replication (set to mirror to create a true replica).
+    title: Policy to apply during replication (set to mirror to create a true replica).
     type: text
     default: 'white-list'
 - name: authfetch
   title: Auth reads
-  description: Should npm installs require an token?
+  description: Should npm installs require a token?
   items:
   - name: authfetch
     type: select_one
@@ -839,7 +839,7 @@ config:
       title: Custom
 - name: github
   when: auth_source=auth_type_github
-  title: Github integration
+  title: GitHub Integration
   description: Configure npm On-Site to authenticate against a GitHub server
   items:
   - name: github_org
@@ -851,23 +851,23 @@ config:
     type: select_one
     items:
     - name: github_type_public
-      title: Github.com
+      title: github.com
       type: text
       required: false
     - name: github_type_enterprise
-      title: Github Enterprise
+      title: GitHub Enterprise
       type: text
       required: false
   - name: github_enterprise_host
-    title: Github Enterprise Host
-    description: The hostname of your Github Enterprise server
+    title: GitHub Enterprise Host
+    description: The hostname of your GitHub Enterprise server
     recommended: false
     when: github_type=github_type_enterprise
     type: text
     required: true
   - name: github_enterprise_protocol
-    title: Github Enterprise Host
-    description: The hostname of your Github Enterprise server
+    title: GitHub Enterprise Host
+    description: The hostname of your GitHub Enterprise server
     recommended: false
     when: github_type=github_type_enterprise
     type: select_one
