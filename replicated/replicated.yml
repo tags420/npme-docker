@@ -726,24 +726,6 @@ config:
     title: Proxy URL
     type: text
     required: false
-  - name: scoped_search
-    title: Scoped CLI Search
-    description: Should npm search be enabled for scoped modules?
-    items:
-    - name: scoped_search
-      type: select_one
-      default: scoped_search_yes
-      items:
-      - name: scoped_search_no
-        title: No
-        type: text
-        affix: left
-        required: false
-      - name: scoped_search_yes
-        title: Yes
-        type: text
-        affix: right
-        required: false
 - name: storage
   title: Storage
   description: Configure the location of persistent npm On-Site storage
@@ -772,6 +754,24 @@ config:
     title: Postgres DB data
     type: text
     default: /usr/local/lib/npme/postgres
+- name: scoped_search
+  title: Scoped CLI Search
+  description: Should npm search be enabled for scoped modules?
+  items:
+  - name: scoped_search
+    type: select_one
+    default: scoped_search_yes
+    items:
+    - name: scoped_search_no
+      title: No
+      type: text
+      affix: left
+      required: false
+    - name: scoped_search_yes
+      title: Yes
+      type: text
+      affix: right
+      required: false
 - name: read_through_cache
   title: Read through cache
   description: Should missing packages be returned from npmjs.com?
