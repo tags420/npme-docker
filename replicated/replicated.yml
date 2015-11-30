@@ -778,7 +778,7 @@ config:
   items:
   - name: read_through_cache
     type: select_one
-    default: read_through_cache_no
+    default: read_through_cache_yes
     items:
     - name: read_through_cache_no
       title: No
