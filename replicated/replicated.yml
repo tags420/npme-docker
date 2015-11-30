@@ -21,21 +21,21 @@ admin_commands:
   component: npme
   image:
     image_name: policy-follower
-    version: '1.0.15'
+    version: '1.0.16'
 - alias: add-package
   command: [sh, /etc/npme/add-package.sh]
   run_type: exec
   component: npme
   image:
     image_name: policy-follower
-    version: '1.0.15'
+    version: '1.0.16'
 - alias: remove-package
   command: [sh, /etc/npme/remove-package.sh]
   run_type: exec
   component: npme
   image:
     image_name: policy-follower
-    version: '1.0.15'
+    version: '1.0.16'
 - alias: ssh
   run_type: exec
   command: [/bin/sh]
@@ -175,7 +175,7 @@ components:
     support_files: []
   - source: replicated
     image_name: policy-follower
-    version: '1.0.15'
+    version: '1.0.16'
     privileged: false
     restart:
       policy: on-failure
