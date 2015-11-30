@@ -1,6 +1,11 @@
 #!/usr/bin/env sh
 chmod 755 /etc/npme/install-couch-app.sh
-sh /etc/npme/install-couch-app.sh
+
+curl --fail -XGET $COUCH_URL
+ret=$?
+if [ $ret -ne 0 ]; then
+  sh /etc/npme/install-couch-app.sh
+fi
 
 curl --fail -XGET $COUCH_URL
 ret=$?
