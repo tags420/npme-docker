@@ -1032,15 +1032,15 @@ config:
   items:
   - name: saml_entity_id
     title: Entity ID (Unique identifier for the service provider, often the URL of the metadata file)
-    default: "http://{{repl ConfigOption "publicip" }}:8082/auth/saml/metadata.xml"
+    default: 'http://{{repl ConfigOption "publicip" }}:8082/auth/saml/metadata.xml'
     type: text
   - name: saml_assert_endpoint
     title: Assert Endpoint (URL of service provider assert endpoint)
-    default: "http://{{repl ConfigOption "publicip" }}:8082/auth/saml/assert"
+    default: 'http://{{repl ConfigOption "publicip" }}:8082/auth/saml/assert'
     type: text
   - name: saml_logout_endpoint
     title: Logout Endpoint (URL of service provider logout endpoint)
-    default: "http://{{repl ConfigOption "publicip" }}:8082/auth/saml/logout"
+    default: 'http://{{repl ConfigOption "publicip" }}:8082/auth/saml/logout'
     type: text
   - name: saml_nameid_format
     title: Format for Name ID
