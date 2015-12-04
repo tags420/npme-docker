@@ -432,13 +432,13 @@ components:
         static_val: '{{repl ConfigOption "secret" }}'
         is_excluded_from_support: true
       - name: AUTHENTICATION_METHOD
-        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl ConfigOption "authentication" }}{{repl end}}{{repl end}}{{repl end}}'
+        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}saml{{repl else}}{{repl ConfigOption "authentication" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
         is_excluded_from_support: true
       - name: AUTHORIZATION_METHOD
-        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl ConfigOption "authorization" }}{{repl end}}{{repl end}}{{repl end}}'
+        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}saml{{repl else}}{{repl ConfigOption "authorization" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
         is_excluded_from_support: true
       - name: SESSION_HANDLER
-        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}saml{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}redis{{repl else}}{{repl ConfigOption "session" }}{{repl end}}{{repl end}}{{repl end}}'
+        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}redis{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}saml{{repl else}}{{repl ConfigOption "session" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
         is_excluded_from_support: true
       - name: REJECT_UNAUTHORIZED
         static_val: '{{repl if ConfigOptionEquals "reject_unauthorized" "reject_unauthorized_no" }}0{{repl else }}1{{repl end }}'
@@ -1054,7 +1054,7 @@ config:
     title: Identity Provider Single Logout URL
     default: ''
     type: text
-  - name: saml_certificate`
+  - name: saml_certificate
     title: Identity Provider Certificate (PEM format)
     default: ''
     type: text
