@@ -670,7 +670,7 @@ components:
     customer_files: []
     env_vars:
       - name: CERTIFICATE
-        static_val: '{{repl ConfigOption "saml_certificate" | Base64Encode }}'
+        static_val: '{{repl ConfigOption "saml_certificate" }}'
       - name: REDIS_URL
         static_val: 'redis://{{repl ThisHostInterfaceAddress "docker0" }}:6379'
       - name: ENTITY_ID
