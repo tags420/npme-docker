@@ -90,7 +90,7 @@ components:
     support_files: []
   - source: replicated
     image_name: npm-auth-ws
-    version: '1.0.7'
+    version: '1.0.8'
     privileged: false
     restart:
       policy: on-failure
@@ -624,7 +624,7 @@ components:
     support_files: []
   - source: replicated
     image_name: newww
-    version: '1.0.4'
+    version: '1.0.5'
     privileged: false
     restart:
       policy: on-failure
