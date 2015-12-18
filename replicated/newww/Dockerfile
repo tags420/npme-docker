@@ -9,11 +9,13 @@ COPY ./replicated/newww/start.sh /etc/npme/start.sh
 
 RUN echo '@npm:registry=https://enterprise.npmjs.com/' > ~/.npmrc
 RUN apk update
+RUN apk add bash
 RUN apk add python
 RUN apk add make
 RUN apk add g++
 RUN npm install node-gyp -g
 RUN npm install newww
+RUN npm install @npm/npmo-auth-callbacks
 RUN apk del python
 RUN apk del make
 RUN apk del g++

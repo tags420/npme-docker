@@ -90,7 +90,7 @@ components:
     support_files: []
   - source: replicated
     image_name: npm-auth-ws
-    version: '1.0.6'
+    version: '1.0.8'
     privileged: false
     restart:
       policy: on-failure
@@ -116,13 +116,13 @@ components:
         static_val: '{{repl ConfigOption "secret" }}'
         is_excluded_from_support: true
       - name: AUTHENTICATION_METHOD
-        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl ConfigOption "authentication" }}{{repl end}}{{repl end}}{{repl end}}'
+        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}sso{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl ConfigOption "authentication" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
         is_excluded_from_support: true
       - name: AUTHORIZATION_METHOD
-        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl ConfigOption "authorization" }}{{repl end}}{{repl end}}{{repl end}}'
+        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}sso{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl ConfigOption "authorization" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
         is_excluded_from_support: true
       - name: SESSION_HANDLER
-        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}redis{{repl else}}{{repl ConfigOption "session" }}{{repl end}}{{repl end}}{{repl end}}'
+        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}redis{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}sso{{repl else}}{{repl ConfigOption "session" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
         is_excluded_from_support: true
       - name: REJECT_UNAUTHORIZED
         static_val: '{{repl if ConfigOptionEquals "reject_unauthorized" "reject_unauthorized_no" }}0{{repl else }}1{{repl end }}'
@@ -130,6 +130,22 @@ components:
       - name: LOGIN_CACHE_REDIS
         static_val: 'redis://{{repl ThisHostInterfaceAddress "docker0" }}:6379'
         is_excluded_from_support: true
+      - name: CERTIFICATE
+        static_val: '{{repl ConfigOption "saml_certificate"}}'
+      - name: REDIS_URL
+        static_val: 'redis://{{repl ThisHostInterfaceAddress "docker0" }}:6379'
+      - name: ENTITY_ID
+        static_val: '{{repl ConfigOption "saml_entity_id" }}'
+      - name: ASSERT_ENDPOINT
+        static_val: '{{repl ConfigOption "saml_assert_endpoint" }}'
+      - name: LOGOUT_ENDPOINT
+        static_val: '{{repl ConfigOption "saml_logout_endpoint" }}'
+      - name: NAMEID_FORMAT
+        static_val: '{{repl ConfigOption "saml_nameid_format" }}'
+      - name: SSO_LOGIN_URL
+        static_val: '{{repl ConfigOption "saml_sso_login_url" }}'
+      - name: SSO_LOGOUT_URL
+        static_val: '{{repl ConfigOption "saml_sso_logout_url" }}'
     ports:
     - private_port: '5000'
       public_port: '5000'
@@ -416,13 +432,13 @@ components:
         static_val: '{{repl ConfigOption "secret" }}'
         is_excluded_from_support: true
       - name: AUTHENTICATION_METHOD
-        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl ConfigOption "authentication" }}{{repl end}}{{repl end}}{{repl end}}'
+        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}saml{{repl else}}{{repl ConfigOption "authentication" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
         is_excluded_from_support: true
       - name: AUTHORIZATION_METHOD
-        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl ConfigOption "authorization" }}{{repl end}}{{repl end}}{{repl end}}'
+        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}saml{{repl else}}{{repl ConfigOption "authorization" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
         is_excluded_from_support: true
       - name: SESSION_HANDLER
-        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}redis{{repl else}}{{repl ConfigOption "session" }}{{repl end}}{{repl end}}{{repl end}}'
+        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}redis{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}saml{{repl else}}{{repl ConfigOption "session" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
         is_excluded_from_support: true
       - name: REJECT_UNAUTHORIZED
         static_val: '{{repl if ConfigOptionEquals "reject_unauthorized" "reject_unauthorized_no" }}0{{repl else }}1{{repl end }}'
@@ -608,7 +624,7 @@ components:
     support_files: []
   - source: replicated
     image_name: newww
-    version: '1.0.2'
+    version: '1.0.5'
     privileged: false
     restart:
       policy: on-failure
@@ -652,10 +668,30 @@ components:
           PORT=8081
           HOST=0.0.0.0
     customer_files: []
-    env_vars: []
+    env_vars:
+      - name: CERTIFICATE
+        static_val: '{{repl ConfigOption "saml_certificate" }}'
+      - name: REDIS_URL
+        static_val: 'redis://{{repl ThisHostInterfaceAddress "docker0" }}:6379'
+      - name: ENTITY_ID
+        static_val: '{{repl ConfigOption "saml_entity_id" }}'
+      - name: ASSERT_ENDPOINT
+        static_val: '{{repl ConfigOption "saml_assert_endpoint" }}'
+      - name: LOGOUT_ENDPOINT
+        static_val: '{{repl ConfigOption "saml_logout_endpoint" }}'
+      - name: NAMEID_FORMAT
+        static_val: '{{repl ConfigOption "saml_nameid_format" }}'
+      - name: SSO_LOGIN_URL
+        static_val: '{{repl ConfigOption "saml_sso_login_url" }}'
+      - name: SSO_LOGOUT_URL
+        static_val: '{{repl ConfigOption "saml_sso_logout_url" }}'
     ports:
       - private_port: "8081"
         public_port: "8081"
+        port_type: tcp
+        when: ""
+      - private_port: "8082"
+        public_port: "8082"
         port_type: tcp
         when: ""
     volumes: []
@@ -856,6 +892,8 @@ config:
       title: LDAP
     - name: auth_type_open
       title: Open
+    - name: auth_type_saml
+      title: SAML
     - name: auth_type_custom
       title: Custom
 - name: github
@@ -987,6 +1025,39 @@ config:
     - name: open_warning
       type: label
       value: Login with any username and password. Only use this setting if you are behind a firewall.
+- name: saml
+  when: auth_source=auth_type_saml
+  title: SAML SSO Integration
+  description: Configure npm On-Site to work with your SAML SSO provider.
+  items:
+  - name: saml_entity_id
+    title: Entity ID (Unique identifier for the service provider, often the URL of the metadata file)
+    default: 'http://{{repl ConfigOption "publicip" }}:8082/auth/saml/metadata.xml'
+    type: text
+  - name: saml_assert_endpoint
+    title: Assert Endpoint (URL of service provider assert endpoint)
+    default: 'http://{{repl ConfigOption "publicip" }}:8082/auth/saml/assert'
+    type: text
+  - name: saml_logout_endpoint
+    title: Logout Endpoint (URL of service provider logout endpoint)
+    default: 'http://{{repl ConfigOption "publicip" }}:8082/auth/saml/logout'
+    type: text
+  - name: saml_nameid_format
+    title: Format for Name ID
+    default: 'urn:oasis:names:tc:SAML:2.0:nameid-format:emailAddress'
+    type: text
+  - name: saml_sso_login_url
+    title: Identity Provider SSO Login URL
+    default: ''
+    type: text
+  - name: saml_sso_logout_url
+    title: Identity Provider Single Logout URL
+    default: ''
+    type: text
+  - name: saml_certificate
+    title: Identity Provider Certificate (Base64 Encode PEM Format)
+    default: ''
+    type: text
 - name: custom
   when: auth_source=auth_type_custom
   title: Custom Authentication
