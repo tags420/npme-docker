@@ -624,7 +624,7 @@ components:
     support_files: []
   - source: replicated
     image_name: newww
-    version: '1.0.5'
+    version: '1.0.6'
     privileged: false
     restart:
       policy: on-failure
