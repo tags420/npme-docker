@@ -14,7 +14,7 @@ admin_commands:
   component: npme
   image:
     image_name: npme
-    version: '1.0.26'
+    version: '1.0.27'
 - alias: reset-follower
   command: [sh, /etc/npme/reset-follower.sh]
   run_type: exec
@@ -42,7 +42,7 @@ admin_commands:
   component: npme
   image:
     image_name: npme
-    version: '1.0.26'
+    version: '1.0.27'
 state:
   ready: null
 backup:
@@ -365,7 +365,7 @@ components:
     support_files: []
   - source: replicated
     image_name: npme
-    version: '1.0.26'
+    version: '1.0.27'
     privileged: false
     restart:
       policy: on-failure
@@ -475,6 +475,9 @@ components:
         is_excluded_from_support: true
       - name: AUTH_FETCH
         static_val: '{{repl if ConfigOptionEquals "authfetch" "authfetch_no" }}false{{repl else }}true{{repl end}}'
+        is_excluded_from_support: true
+      - name: AUTH_GLOBAL_PACKAGES
+        static_val: '{{repl if ConfigOptionEquals "authglobal" "authglobal_no" }}false{{repl else }}true{{repl end}}'
         is_excluded_from_support: true
       - name: SCOPED_SEARCH
         static_val: '{{repl if ConfigOptionEquals "scoped_search" "scoped_search_no" }}{{repl else }}true{{repl end}}'
@@ -861,7 +864,7 @@ config:
     type: text
     default: 'white-list'
 - name: authfetch
-  title: Auth reads
+  title: Auth Reads
   description: Should npm installs require a token?
   items:
   - name: authfetch
@@ -874,6 +877,24 @@ config:
       affix: left
       required: false
     - name: authfetch_yes
+      title: Yes
+      type: text
+      affix: right
+      required: false
+- name: authglobal
+  title: Auth Global Packages
+  description: Should authentication be required to install global packages (packages without a scope).
+  items:
+  - name: authglobal
+    type: select_one
+    default: authglobal_no
+    items:
+    - name: authglobal_no
+      title: No
+      type: text
+      affix: left
+      required: false
+    - name: authglobal_yes
       title: Yes
       type: text
       affix: right
