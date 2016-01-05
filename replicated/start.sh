@@ -13,8 +13,7 @@ if [ $ret -ne 0 ]; then
   exit 1
 fi
 
-$auth_global=$AUTH_GLOBAL_PACKAGES
-if [ $ret == 'false' ]; then
+if [ $AUTH_GLOBAL_PACKAGES == 'false' ]; then
   unset AUTH_GLOBAL_PACKAGES
 fi
 
