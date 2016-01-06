@@ -882,8 +882,8 @@ config:
       affix: right
       required: false
 - name: authglobal
-  title: Auth Global Packages
-  description: Should authentication be required to install global packages (packages without a scope).
+  title: Public Facing
+  description: Is this npm On-Site instance running without a firewall on the public-facing Internet? This setting turns on authentication for more endpoints, such as global package installs.
   items:
   - name: authglobal
     type: select_one
