@@ -812,7 +812,7 @@ config:
       affix: right
       required: false
 - name: read_through_cache
-  title: Read through cache
+  title: Read Through Cache
   description: Should missing packages be returned from npmjs.com?
   items:
   - name: read_through_cache
@@ -830,7 +830,7 @@ config:
       affix: right
       required: false
 - name: reject_unauthorized
-  title: Reject unauthorized
+  title: Reject Unauthorized
   description: Should npm On-Site apply strict SSL checks?
   items:
   - name: reject_unauthorized
@@ -848,7 +848,7 @@ config:
       affix: right
       required: false
 - name: couch_url_remote
-  title: Upstream registry
+  title: Upstream Registry
   description: Which upstream registry should we replicate from?
   items:
   - name: couch_url_remote
