@@ -14,7 +14,7 @@ admin_commands:
   component: npme
   image:
     image_name: npme
-    version: '1.0.26'
+    version: '1.0.29'
 - alias: reset-follower
   command: [sh, /etc/npme/reset-follower.sh]
   run_type: exec
@@ -42,7 +42,7 @@ admin_commands:
   component: npme
   image:
     image_name: npme
-    version: '1.0.26'
+    version: '1.0.29'
 state:
   ready: null
 backup:
@@ -365,7 +365,7 @@ components:
     support_files: []
   - source: replicated
     image_name: npme
-    version: '1.0.26'
+    version: '1.0.29'
     privileged: false
     restart:
       policy: on-failure
@@ -475,6 +475,9 @@ components:
         is_excluded_from_support: true
       - name: AUTH_FETCH
         static_val: '{{repl if ConfigOptionEquals "authfetch" "authfetch_no" }}false{{repl else }}true{{repl end}}'
+        is_excluded_from_support: true
+      - name: AUTH_GLOBAL_PACKAGES
+        static_val: '{{repl if ConfigOptionEquals "authglobal" "authglobal_no" }}false{{repl else }}true{{repl end}}'
         is_excluded_from_support: true
       - name: SCOPED_SEARCH
         static_val: '{{repl if ConfigOptionEquals "scoped_search" "scoped_search_no" }}{{repl else }}true{{repl end}}'
@@ -809,7 +812,7 @@ config:
       affix: right
       required: false
 - name: read_through_cache
-  title: Read through cache
+  title: Read Through Cache
   description: Should missing packages be returned from npmjs.com?
   items:
   - name: read_through_cache
@@ -827,7 +830,7 @@ config:
       affix: right
       required: false
 - name: reject_unauthorized
-  title: Reject unauthorized
+  title: Reject Unauthorized
   description: Should npm On-Site apply strict SSL checks?
   items:
   - name: reject_unauthorized
@@ -845,7 +848,7 @@ config:
       affix: right
       required: false
 - name: couch_url_remote
-  title: Upstream registry
+  title: Upstream Registry
   description: Which upstream registry should we replicate from?
   items:
   - name: couch_url_remote
@@ -861,8 +864,8 @@ config:
     type: text
     default: 'white-list'
 - name: authfetch
-  title: Auth reads
-  description: Should npm installs require a token?
+  title: Auth Scoped Installs
+  description: Should the npm install of a scoped packages (@mycompany/foo) require a token?
   items:
   - name: authfetch
     type: select_one
@@ -874,6 +877,24 @@ config:
       affix: left
       required: false
     - name: authfetch_yes
+      title: Yes
+      type: text
+      affix: right
+      required: false
+- name: authglobal
+  title: Auth All Installs
+  description: Should the npm install of a public packages require a token? This setting enables additional security measures that are not compatible with all authentication strategies. Unless there's a compelling reason, we recommend running npm On-Site behind a firewall and setting this value to "No".
+  items:
+  - name: authglobal
+    type: select_one
+    default: authglobal_no
+    items:
+    - name: authglobal_no
+      title: No
+      type: text
+      affix: left
+      required: false
+    - name: authglobal_yes
       title: Yes
       type: text
       affix: right
