@@ -865,7 +865,7 @@ config:
     default: 'white-list'
 - name: authfetch
   title: Auth Scoped Installs
-  description: Should the npm install of a scoped package (@mycompany/foo) require a token?
+  description: Should the npm install of a scoped packages (@mycompany/foo) require a token?
   items:
   - name: authfetch
     type: select_one
@@ -883,7 +883,7 @@ config:
       required: false
 - name: authglobal
   title: Auth All Installs
-  description: Should npm install of a public package require a token? This setting enables additional security measures that are not compatible with certain authentication strategies. Unless there's a compelling reason, we recommend running npm On-Site behind a firewall and setting this value to "No".
+  description: Should the npm install of a public packages require a token? This setting enables additional security measures that are not compatible with all authentication strategies. Unless there's a compelling reason, we recommend running npm On-Site behind a firewall and setting this value to "No".
   items:
   - name: authglobal
     type: select_one
