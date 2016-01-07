@@ -864,8 +864,8 @@ config:
     type: text
     default: 'white-list'
 - name: authfetch
-  title: Auth Reads
-  description: Should npm installs require a token?
+  title: Auth Scoped Installs
+  description: Should the npm install of a scoped package (@mycompany/foo) require a token?
   items:
   - name: authfetch
     type: select_one
@@ -882,8 +882,8 @@ config:
       affix: right
       required: false
 - name: authglobal
-  title: Public Facing
-  description: Is this npm On-Site instance running without a firewall on the public-facing Internet? This setting turns on authentication for more endpoints, such as global package installs.
+  title: Auth All Installs
+  description: Should npm install of a public package require a token? This setting enables additional security measures that are not compatible with certain authentication strategies. Unless there's a compelling reason, we recommend running npm On-Site behind a firewall and setting this value to "No".
   items:
   - name: authglobal
     type: select_one
