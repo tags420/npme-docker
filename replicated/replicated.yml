@@ -8,6 +8,13 @@ properties:
   console_title: "npm On-Site Management Console"
   bypass_local_registry: false
 admin_commands:
+- alias: manage-tokens
+  command: [sh, npmo-auth-token]
+  run_type: exec
+  component: npme
+  image:
+    image_name: npm-auth-ws
+    version: '1.1.0'
 - alias: update-license
   command: [sh, /usr/local/bin/npme-update-license.sh]
   run_type: exec
@@ -90,7 +97,7 @@ components:
     support_files: []
   - source: replicated
     image_name: npm-auth-ws
-    version: '1.0.9'
+    version: '1.1.0'
     privileged: false
     restart:
       policy: on-failure
