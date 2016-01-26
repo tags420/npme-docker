@@ -9,7 +9,7 @@ properties:
   bypass_local_registry: false
 admin_commands:
 - alias: manage-tokens
-  command: [sh, npmo-auth-token]
+  command: [/usr/bin/node, /usr/bin/npmo-auth-token]
   run_type: exec
   component: npme
   image:
@@ -1001,6 +1001,7 @@ config:
     required: true
   - name: label_encryption_label
     title: Encryption Type
+    type: label
   - name: ldap_encryption
     type: select_one
     default: ldap_encryption_plain
