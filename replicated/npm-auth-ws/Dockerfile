@@ -9,5 +9,6 @@ WORKDIR /etc/npme
 
 RUN echo '@npm:registry=https://enterprise.npmjs.com/' > ~/.npmrc
 RUN npm install @npm/npm-auth-ws
+RUN npm install @npm/npmo-auth-token -g
 
 CMD ["/etc/npme/start.sh"]
