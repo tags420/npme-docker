@@ -2,7 +2,7 @@
 
 if [ ! -d "/etc/npme/data/npm-explicit-installs" ]; then
   mv /etc/npme/node_modules/newww/node_modules/npm-explicit-installs /etc/npme/data/npm-explicit-installs
-  cd /etc/npme/data/npm-explicit-installs; npm i --production
+  cd /etc/npme/data/npm-explicit-installs; rm -rf node_modules; npm i --production
 fi
 rm -rf /etc/npme/node_modules/newww/node_modules/npm-explicit-installs
 ln -f -s /etc/npme/data/npm-explicit-installs /etc/npme/node_modules/newww/node_modules
