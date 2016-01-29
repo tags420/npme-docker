@@ -634,7 +634,7 @@ components:
     support_files: []
   - source: replicated
     image_name: newww
-    version: '1.0.7'
+    version: '1.0.8'
     privileged: false
     restart:
       policy: on-failure
@@ -704,7 +704,9 @@ components:
         public_port: "8082"
         port_type: tcp
         when: ""
-    volumes: []
+    volumes:
+      - host_path: '{{repl ConfigOption "data_host_path" }}'
+        container_path: /etc/npme/data
     support_files: []
   - source: replicated
     image_name: es-follower
