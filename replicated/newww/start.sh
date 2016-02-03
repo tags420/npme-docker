@@ -4,6 +4,10 @@ if [ ! -d "/etc/npme/data/npm-explicit-installs" ]; then
   mv /etc/npme/node_modules/newww/node_modules/npm-explicit-installs /etc/npme/data/npm-explicit-installs
   cd /etc/npme/data/npm-explicit-installs; rm -rf node_modules; npm i --production
 fi
+# whenever we boot a new copy of the docker image, we remove the
+# base copy of npm-explicit-installs and replace it with a copy
+# that is linked on the host machine. This allows permanent edits
+# to be made to the package listing page.
 rm -rf /etc/npme/node_modules/newww/node_modules/npm-explicit-installs
 ln -f -s /etc/npme/data/npm-explicit-installs /etc/npme/node_modules/newww/node_modules
 
