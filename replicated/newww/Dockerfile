@@ -15,7 +15,7 @@ RUN apk add python
 RUN apk add make
 RUN apk add g++
 RUN npm install node-gyp -g
-RUN npm install newww@next
+RUN npm install newww
 RUN npm install @npm/npmo-auth-callbacks
 RUN apk del python
 RUN apk del make
