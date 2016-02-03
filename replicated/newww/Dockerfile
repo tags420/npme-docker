@@ -6,6 +6,7 @@ MAINTAINER Ben Coe
 
 WORKDIR /etc/npme
 COPY ./replicated/newww/start.sh /etc/npme/start.sh
+COPY ./replicated/newww/homepage.sh /etc/npme/homepage.sh
 
 RUN echo '@npm:registry=https://enterprise.npmjs.com/' > ~/.npmrc
 RUN apk update

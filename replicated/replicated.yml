@@ -43,6 +43,13 @@ admin_commands:
   image:
     image_name: policy-follower
     version: '1.0.17'
+- alias: edit-homepage
+  command: [sh, /etc/npme/homepage.sh]
+  run_type: exec
+  component: npme
+  image:
+    image_name: newww
+    version: '1.1.0'
 - alias: ssh
   run_type: exec
   command: [/bin/sh]
@@ -634,7 +641,7 @@ components:
     support_files: []
   - source: replicated
     image_name: newww
-    version: '1.0.12'
+    version: '1.1.0'
     privileged: false
     restart:
       policy: on-failure
