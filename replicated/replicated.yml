@@ -1055,7 +1055,6 @@ config:
     title: Restricted User Group
     type: text
     value: '{{repl LdapCopyAuthFrom "RestrictedGroupCNs"}}'
-    required: true
   - name: ldap_username_field
     title: Username field
     type: text
