@@ -695,6 +695,12 @@ components:
         static_val: '{{repl ConfigOption "saml_sso_login_url" }}'
       - name: SSO_LOGOUT_URL
         static_val: '{{repl ConfigOption "saml_sso_logout_url" }}'
+      - name: COUCH_URL_REMOTE
+        static_val: '{{repl ConfigOption "couch_url_remote" }}'
+        is_excluded_from_support: true
+      - name: PROXY_URL
+        static_val: '{{repl ConfigOption "proxy_url" }}'
+        is_excluded_from_support: true
     ports:
       - private_port: "8081"
         public_port: "8081"
