@@ -43,6 +43,13 @@ admin_commands:
   image:
     image_name: policy-follower
     version: '1.0.17'
+- alias: edit-homepage
+  command: [sh, /etc/npme/homepage.sh]
+  run_type: exec
+  component: npme
+  image:
+    image_name: newww
+    version: '1.1.0'
 - alias: ssh
   run_type: exec
   command: [/bin/sh]
@@ -634,7 +641,7 @@ components:
     support_files: []
   - source: replicated
     image_name: newww
-    version: '1.0.7'
+    version: '1.1.0'
     privileged: false
     restart:
       policy: on-failure
@@ -695,6 +702,12 @@ components:
         static_val: '{{repl ConfigOption "saml_sso_login_url" }}'
       - name: SSO_LOGOUT_URL
         static_val: '{{repl ConfigOption "saml_sso_logout_url" }}'
+      - name: COUCH_URL_REMOTE
+        static_val: '{{repl ConfigOption "couch_url_remote" }}'
+        is_excluded_from_support: true
+      - name: PROXY_URL
+        static_val: '{{repl ConfigOption "proxy_url" }}'
+        is_excluded_from_support: true
     ports:
       - private_port: "8081"
         public_port: "8081"
@@ -704,7 +717,9 @@ components:
         public_port: "8082"
         port_type: tcp
         when: ""
-    volumes: []
+    volumes:
+      - host_path: '{{repl ConfigOption "data_host_path" }}'
+        container_path: /etc/npme/data
     support_files: []
   - source: replicated
     image_name: es-follower
