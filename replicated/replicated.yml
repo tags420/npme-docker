@@ -708,6 +708,11 @@ components:
       - name: PROXY_URL
         static_val: '{{repl ConfigOption "proxy_url" }}'
         is_excluded_from_support: true
+      - name: FRONT_DOOR_HOST
+        static_val: '{{repl ConfigOption "canonical_url" }}'
+      - name: SHARED_FETCH_SECRET
+        static_val: '{{repl ConfigOption "secret" }}'
+        is_excluded_from_support: true
     ports:
       - private_port: "8081"
         public_port: "8081"
