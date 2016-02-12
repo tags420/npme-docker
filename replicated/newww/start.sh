@@ -5,9 +5,7 @@
 # that is linked on the host machine. This allows permanent edits
 # to be made to the package listing page.
 if [ ! -d "/etc/npme/data/npm-explicit-installs" ]; then
-  mv /etc/npme/node_modules/newww/node_modules/npm-explicit-installs /etc/npme/data/npm-explicit-installs
-  # we need to re-install because of shared dependencies and npm@3.x's deduping.
-  cd /etc/npme/data/npm-explicit-installs; rm -rf node_modules; npm i --production
+  mv /etc/npme/node_modules/npm-explicit-installs /etc/npme/data/npm-explicit-installs
 fi
 rm -rf /etc/npme/node_modules/newww/node_modules/npm-explicit-installs
 ln -f -s /etc/npme/data/npm-explicit-installs /etc/npme/node_modules/newww/node_modules

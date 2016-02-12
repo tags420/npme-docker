@@ -17,6 +17,7 @@ RUN apk add g++
 RUN npm install node-gyp -g
 RUN npm install newww
 RUN npm install @npm/npmo-auth-callbacks
+RUN npm install npm-explicit-installs
 RUN apk del python
 RUN apk del make
 RUN apk del g++
