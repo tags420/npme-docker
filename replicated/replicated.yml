@@ -996,22 +996,6 @@ config:
 - name: ldap_settings
   title: LDAP Server Settings
   when: auth_source=auth_type_ldap
-  test_proc:
-    display_name: Test Credentials
-    command: ldap_auth
-    arg_fields:
-      - ldap_type
-      - ldap_hostname
-      - ldap_port
-      - ldap_encryption
-      - ldap_search_user
-      - ldap_search_password
-      - ldap_base_dn
-      - ldap_usersearch_dn
-      - ldap_restricted_user_group
-      - ldap_username_field
-      - ldap_login_username
-      - ldap_login_password
   items:
   - name: ldap_type
     title: LDAP Server Type
@@ -1083,6 +1067,34 @@ config:
     value: '{{repl LdapCopyAuthFrom "FieldUsername"}}'
     default: uid
     required: true
+  - name: ldap_test_inputs
+    type: heading
+    title: Test LDAP Settings
+    description: Test the above LDAP settings by entering a username and password and clicking the button below. You will be notified of success or failure.
+  - name: ldap_login_username
+    title: Test username
+    type: text
+    default: 'user123'
+  - name: ldap_login_password
+    title: Test password
+    type: text
+    default: 'secret'
+  test_proc:
+    display_name: Test LDAP
+    command: ldap_auth
+    arg_fields:
+      - ldap_type
+      - ldap_hostname
+      - ldap_port
+      - ldap_encryption
+      - ldap_search_user
+      - ldap_search_password
+      - ldap_base_dn
+      - ldap_usersearch_dn
+      - ldap_restricted_user_group
+      - ldap_username_field
+      - ldap_login_username
+      - ldap_login_password
 - name: open
   when: auth_source=auth_type_open
   title: Open Access
