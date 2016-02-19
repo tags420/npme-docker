@@ -1077,7 +1077,7 @@ config:
     default: 'user123'
   - name: ldap_login_password
     title: Test password
-    type: text
+    type: password
     default: 'secret'
   test_proc:
     display_name: Test LDAP
