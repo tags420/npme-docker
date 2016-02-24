@@ -1,5 +1,5 @@
 # Set the base image to Ubuntu
-FROM mhart/alpine-node:4.3.0
+FROM mhart/alpine-node:4.3.1
 
 # File Author / Maintainer
 MAINTAINER Ben Coe
