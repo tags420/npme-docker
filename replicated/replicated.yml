@@ -931,19 +931,26 @@ config:
   description: How should we authenticate users?
   items:
   - name: auth_source
-    default: auth_type_github
+    default: auth_type_open
     type: select_one
     items:
+    - name: auth_type_open
+      title: Open
     - name: auth_type_github
       title: GitHub
     - name: auth_type_ldap
       title: LDAP
-    - name: auth_type_open
-      title: Open
     - name: auth_type_saml
       title: SAML
     - name: auth_type_custom
       title: Custom
+- name: open
+  when: auth_source=auth_type_open
+  title: Open Access
+  items:
+    - name: open_warning
+      type: label
+      value: Login with any username and password. Only use this setting if you are behind a firewall.
 - name: github
   when: auth_source=auth_type_github
   title: GitHub Integration
@@ -1095,13 +1102,6 @@ config:
       - ldap_username_field
       - ldap_login_username
       - ldap_login_password
-- name: open
-  when: auth_source=auth_type_open
-  title: Open Access
-  items:
-    - name: open_warning
-      type: label
-      value: Login with any username and password. Only use this setting if you are behind a firewall.
 - name: saml
   when: auth_source=auth_type_saml
   title: SAML SSO Integration
