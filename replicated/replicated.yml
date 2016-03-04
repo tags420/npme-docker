@@ -49,7 +49,7 @@ admin_commands:
   component: npme
   image:
     image_name: newww
-    version: '2.0.0'
+    version: '2.0.1'
 - alias: ssh
   run_type: exec
   command: [/bin/sh]
@@ -641,7 +641,7 @@ components:
     support_files: []
   - source: replicated
     image_name: newww
-    version: '2.0.0'
+    version: '2.0.1'
     privileged: false
     restart:
       policy: on-failure
@@ -719,6 +719,8 @@ components:
       - name: AUTH_WWW
         static_val: '{{repl if ConfigOptionEquals "authwww" "authwww_no" }}{{repl else }}true{{repl end}}'
         is_excluded_from_support: true
+      - name: AUTH_HOST
+        static_val: 'http://{{repl ThisHostInterfaceAddress "docker0" }}:5000'
     ports:
       - private_port: "8081"
         public_port: "8081"
