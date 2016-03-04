@@ -49,7 +49,7 @@ admin_commands:
   component: npme
   image:
     image_name: newww
-    version: '1.3.1'
+    version: '2.0.0'
 - alias: ssh
   run_type: exec
   command: [/bin/sh]
@@ -641,7 +641,7 @@ components:
     support_files: []
   - source: replicated
     image_name: newww
-    version: '1.3.1'
+    version: '2.0.0'
     privileged: false
     restart:
       policy: on-failure
@@ -712,6 +712,12 @@ components:
         static_val: '{{repl ConfigOption "canonical_url" }}'
       - name: SHARED_FETCH_SECRET
         static_val: '{{repl ConfigOption "secret" }}'
+        is_excluded_from_support: true
+      - name: AUTHENTICATION_METHOD
+        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}sso{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl ConfigOption "authentication" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
+        is_excluded_from_support: true
+      - name: AUTH_WWW
+        static_val: '{{repl if ConfigOptionEquals "authwww" "authwww_no" }}{{repl else }}true{{repl end}}'
         is_excluded_from_support: true
     ports:
       - private_port: "8081"
@@ -922,6 +928,24 @@ config:
       affix: left
       required: false
     - name: authglobal_yes
+      title: Yes
+      type: text
+      affix: right
+      required: false
+- name: authwww
+  title: Auth Website
+  description: Should authentication be required for the website?
+  items:
+  - name: authwww
+    type: select_one
+    default: authwww_yes
+    items:
+    - name: authwww_no
+      title: No
+      type: text
+      affix: left
+      required: false
+    - name: authwww_yes
       title: Yes
       type: text
       affix: right
