@@ -49,7 +49,7 @@ admin_commands:
   component: npme
   image:
     image_name: newww
-    version: '2.0.3'
+    version: '2.0.4'
 - alias: ssh
   run_type: exec
   command: [/bin/sh]
@@ -641,7 +641,7 @@ components:
     support_files: []
   - source: replicated
     image_name: newww
-    version: '2.0.3'
+    version: '2.0.4'
     privileged: false
     restart:
       policy: on-failure
