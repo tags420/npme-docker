@@ -49,7 +49,14 @@ admin_commands:
   component: npme
   image:
     image_name: newww
-    version: '2.0.4'
+    version: '3.2.0'
+- alias: addon
+  command: [sh, /etc/npme/install-addon.sh]
+  run_type: exec
+  component: npme
+  image:
+    image_name: newww
+    version: '3.2.0'
 - alias: ssh
   run_type: exec
   command: [/bin/sh]
@@ -439,6 +446,8 @@ components:
       - name: FRONT_DOOR_HOST
         static_val: '{{repl ConfigOption "canonical_url" }}'
         is_excluded_from_support: true
+      - name: BILLING_EMAIL
+        static_val: '{{repl LicenseFieldValue "billing_email" }}'
       - name: GITHUB_HOST
         static_val: '{{repl if ConfigOptionEquals "github_type" "github_type_public" }}https://api.github.com{{repl else }}{{repl if ConfigOptionEquals "github_enterprise_protocol" "github_enterprise_protocol_https"}}https{{repl else}}http{{repl end}}://{{repl ConfigOption "github_enterprise_host" }}{{repl end}}'
         is_excluded_from_support: true
@@ -584,16 +593,36 @@ components:
           }
       - filename: /etc/npme/node_modules/@npm/registry-relational-models/bootstrap.js
         contents: |-
+          var Promise = require('bluebird')
           var knex = require('knex')
           var c = knex({client: 'pg', connection: {driver: 'pg', user: 'postgres', host: '{{repl ThisHostInterfaceAddress "docker0" }}'}})
-          c.raw('CREATE DATABASE registry_relational')
-          .then(function (o) {
-            process.exit(0)
-          })
-          .catch(function (e) {
-            if (e.code === '42P04') process.exit(0)
-            else process.exit(1)
-          })
+
+          function createDb (name) {
+            return new Promise(function (resolve, reject) {
+              return c.raw('CREATE DATABASE ' + name)
+                .then(function () {
+                  console.info('created', name)
+                  resolve()
+                })
+                .catch(function (e) {
+                  if (e.code === '42P04') {
+                    console.info('existed', name)
+                    return resolve()
+                  } else return reject()
+                })
+            })
+          }
+
+          createDb('registry_relational')
+            .then(function () {
+              return createDb('oauth2_server')
+            })
+            .then(function () {
+              process.exit(0)
+            })
+            .catch(function () {
+              process.exit(1)
+            })
     customer_files: []
     env_vars:
       - name: DOCKER_ADDR
@@ -641,7 +670,7 @@ components:
     support_files: []
   - source: replicated
     image_name: newww
-    version: '2.0.4'
+    version: '3.2.0'
     privileged: false
     restart:
       policy: on-failure
@@ -652,7 +681,7 @@ components:
       data: ""
       subscriptions: []
     config_files:
-      - filename: /etc/npme/node_modules/newww/.env
+      - filename: /etc/npme/node_modules/@npm/website/.env
         contents: |-
           NPMO_COBRAND='{{repl ConfigOption "branding" }}'
           CANONICAL_HOST=http://localhost:8083
@@ -684,6 +713,28 @@ components:
           FEATURE_ACCESS_PAGE=true
           PORT=8083
           HOST=0.0.0.0
+          CMS_API=a
+          GA_ID=a
+          ELOQUA_SITE_ID=a
+          NEW_RELIC_APP_NAME=a
+          NEW_RELIC_LICENSE_KEY=a
+          NEW_RELIC_LOG_LEVEL=a
+          NEW_RELIC_NO_CONFIG_FILE=a
+          PROMOTION_GA_DIMENSIONS=a
+      - filename: /etc/npme/node_modules/oauth2-server-pg/config.json
+        contents: |-
+          {
+            "connection": {
+              "driver": "pg",
+              "user": "postgres",
+              "host": "{{repl ThisHostInterfaceAddress "docker0" }}",
+              "database": "oauth2_server"
+            },
+            "pool": {
+              "min": 0,
+              "max": 7
+            }
+          }
     customer_files: []
     env_vars:
       - name: CERTIFICATE
@@ -721,6 +772,10 @@ components:
         is_excluded_from_support: true
       - name: AUTH_HOST
         static_val: 'http://{{repl ThisHostInterfaceAddress "docker0" }}:5000'
+      - name: DB_CONFIG
+        static_val: /etc/npme/node_modules/oauth2-server-pg/config
+      - name: BILLING_EMAIL
+        static_val: '{{repl LicenseFieldValue "billing_email" }}'
     ports:
       - private_port: "8081"
         public_port: "8081"

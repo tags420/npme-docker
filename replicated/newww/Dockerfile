@@ -7,6 +7,7 @@ MAINTAINER Ben Coe
 WORKDIR /etc/npme
 COPY ./replicated/newww/start.sh /etc/npme/start.sh
 COPY ./replicated/newww/homepage.sh /etc/npme/homepage.sh
+COPY ./replicated/newww/install-addon.sh /etc/npme/install-addon.sh
 
 RUN echo '@npm:registry=https://enterprise.npmjs.com/' > ~/.npmrc
 RUN apk update
@@ -15,10 +16,12 @@ RUN apk add python
 RUN apk add make
 RUN apk add g++
 RUN npm install node-gyp -g
-RUN npm install newww
+RUN npm install @npm/website
 RUN npm install @npm/npmo-web-proxy
 RUN npm install @npm/npmo-auth-callbacks
+RUN npm install @npm/annotation-api
 RUN npm install npm-explicit-installs
+RUN npm install oauth2-server-pg
 RUN apk del python
 RUN apk del make
 RUN apk del g++
