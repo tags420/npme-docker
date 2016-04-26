@@ -5,7 +5,7 @@ release_notes: "remove proxy if not needed, remove reject-unauthorized from conf
 properties:
   app_url: '{{repl ConfigOption "website_url" }}'
   logo_url: "https://s3.amazonaws.com/replicated-vendor-assets/66045325f001a1e0ccde2d457cb2b30b/66045325f001a1e0ccde2d457cb2b30b.png"
-  console_title: "npm On-Site Management Console"
+  console_title: "npm Enterprise Management Console"
   bypass_local_registry: false
 admin_commands:
 - alias: manage-tokens
@@ -770,14 +770,14 @@ cmds:
 config:
 - name: General
   title: "General"
-  description: "Configure your npm On-Site installation"
+  description: "Configure your npm Enterprise installation"
   items:
   - name: canonical_url
-    title: Full URL of npm On-Site registry (8080 must stay constant, you may optionally change the IP to a pretty host name)
+    title: Full URL of npm Enterprise registry (8080 must stay constant, you may optionally change the IP to a pretty host name)
     type: text
     value: http://{{repl ConfigOption "publicip" }}:8080
   - name: website_url
-    title: Full URL of npm On-Site website (8081 must stay constant, you may optionally change the IP to a pretty host name)
+    title: Full URL of npm Enterprise website (8081 must stay constant, you may optionally change the IP to a pretty host name)
     type: text
     value: http://{{repl ConfigOption "publicip" }}:8081
   - name: branding
@@ -802,7 +802,7 @@ config:
     required: false
 - name: storage
   title: Storage
-  description: Configure the location of persistent npm On-Site storage
+  description: Configure the location of persistent npm Enterprise storage
   items:
   - name: couchdb_host_path
     title: CouchDB storage path on host
@@ -866,7 +866,7 @@ config:
       required: false
 - name: reject_unauthorized
   title: Reject Unauthorized
-  description: Should npm On-Site apply strict SSL checks?
+  description: Should npm Enterprise apply strict SSL checks?
   items:
   - name: reject_unauthorized
     type: select_one
@@ -891,7 +891,7 @@ config:
     title: Upstream URL
     default: https://skimdb.npmjs.com/registry
   - name: remote_shared_fetch_secret
-    title: Upstream secret (only required for replicating from upstream npm On-Site servers)
+    title: Upstream secret (only required for replicating from upstream npm Enterprise servers)
     type: text
     default: ''
   - name: remote_policy
@@ -918,7 +918,7 @@ config:
       required: false
 - name: authglobal
   title: Auth All Installs
-  description: Should the npm install of public packages require a token? This setting enables additional security measures that are not compatible with all authentication strategies. Unless there's a compelling reason, we recommend running npm On-Site behind a firewall and setting this value to "No".
+  description: Should the npm install of public packages require a token? This setting enables additional security measures that are not compatible with all authentication strategies. Unless there's a compelling reason, we recommend running npm Enterprise behind a firewall and setting this value to "No".
   items:
   - name: authglobal
     type: select_one
@@ -980,7 +980,7 @@ config:
 - name: github
   when: auth_source=auth_type_github
   title: GitHub Integration
-  description: Configure npm On-Site to authenticate against a GitHub server
+  description: Configure npm Enterprise to authenticate against a GitHub server
   items:
   - name: github_org
     title: Github Organization (optionally lock down publishes to a single GitHub organization)
@@ -1131,7 +1131,7 @@ config:
 - name: saml
   when: auth_source=auth_type_saml
   title: SAML SSO Integration
-  description: Configure npm On-Site to work with your SAML SSO provider.
+  description: Configure npm Enterprise to work with your SAML SSO provider.
   items:
   - name: saml_entity_id
     title: Entity ID (Unique identifier for the service provider, often the URL of the metadata file)

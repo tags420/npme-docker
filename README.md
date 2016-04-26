@@ -1,6 +1,10 @@
-# npme Docker Image
+# npme Docker Images
 
-run npm Enterprise in a Docker container.
+**UPDATE 2016-04-20**: This README is out-of-date. npm Enterprise now consists of several Docker images, including a registry and a website. The easiest way to pull and run them is using the [npme installer](https://github.com/npm/npme-installer). Please refer to the following to get started:
+
+- [Run the npm Enterprise AMI](http://blog.npmjs.org/post/142409778875/run-npm-enterprise-on-aws-with-just-a-few-clicks)
+- [Quickstart](https://docs.npmjs.com/enterprise/intro)
+- [Installation Guide](https://docs.npmjs.com/enterprise/installation)
 
 ## Running npm Enterprise as a container
 
@@ -37,7 +41,7 @@ On OSX I needed to open up port `:8080`:
 VBoxManage modifyvm "boot2docker-vm" --natpf1 "tcp-port8080,tcp,,8080,,8080";
 ```
 
-To start a shell in a running npm Enterprise container, you can run `docker exec 
+To start a shell in a running npm Enterprise container, you can run `docker exec
 -t -i <container-id> bash`.
 
 ## License
