@@ -549,7 +549,7 @@ components:
     support_files: []
   - source: replicated
     image_name: rr
-    version: '1.0.2'
+    version: '1.1.0'
     privileged: false
     restart:
       policy: on-failure
@@ -628,6 +628,8 @@ components:
       - name: DOCKER_ADDR
         static_val: '{{repl ThisHostInterfaceAddress "docker0" }}'
         is_excluded_from_support: true
+      - name: ON_ERROR_CONTINUE
+        static_val: true
     ports: []
     volumes:
     - host_path: '{{repl ConfigOption "data_host_path" }}'
