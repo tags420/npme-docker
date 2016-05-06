@@ -997,7 +997,7 @@ config:
   items:
   - name: authwww
     type: select_one
-    default: authwww_yes
+    default: authwww_no
     items:
     - name: authwww_no
       title: No
