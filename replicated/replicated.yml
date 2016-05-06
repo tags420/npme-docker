@@ -152,7 +152,7 @@ components:
         static_val: 'redis://{{repl ThisHostInterfaceAddress "docker0" }}:6379'
         is_excluded_from_support: true
       - name: CERTIFICATE
-        static_val: '{{repl ConfigOption "saml_certificate"}}'
+        static_val: '{{repl if ConfigOption "saml_certificate_raw"}}{{repl ConfigOption "saml_certificate_raw" | Base64Encode}}{{repl else}}{{repl ConfigOption "saml_certificate"}}{{repl end }}'
       - name: REDIS_URL
         static_val: 'redis://{{repl ThisHostInterfaceAddress "docker0" }}:6379'
       - name: ENTITY_ID
@@ -740,7 +740,7 @@ components:
     customer_files: []
     env_vars:
       - name: CERTIFICATE
-        static_val: '{{repl ConfigOption "saml_certificate" }}'
+        static_val: '{{repl if ConfigOption "saml_certificate_raw"}}{{repl ConfigOption "saml_certificate_raw" | Base64Encode}}{{repl else}}{{repl ConfigOption "saml_certificate"}}{{repl end }}'
       - name: REDIS_URL
         static_val: 'redis://{{repl ThisHostInterfaceAddress "docker0" }}:6379'
       - name: ENTITY_ID
@@ -1217,7 +1217,12 @@ config:
   - name: saml_certificate
     title: Identity Provider Certificate (Base64 Encode PEM Format)
     default: ''
-    type: text
+    type: hidden
+  - name: saml_certificate_raw
+    title: Identity Provider Certificate
+    type: textarea
+    props:
+      rows: 8
 - name: custom
   when: auth_source=auth_type_custom
   title: Custom Authentication
