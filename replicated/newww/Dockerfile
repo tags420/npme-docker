@@ -22,7 +22,7 @@ RUN npm install @npm/npmo-web-proxy
 RUN npm install @npm/npmo-auth-callbacks
 RUN npm install @npm/annotation-api@1.4.2
 RUN npm install npm-explicit-installs
-RUN npm install oauth2-server-pg@1.4.0
+RUN npm install oauth2-server-pg@1.5.0
 RUN apk del python
 RUN apk del make
 RUN apk del g++

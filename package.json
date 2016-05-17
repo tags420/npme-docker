@@ -4,7 +4,8 @@
   "description": "run npm Enterprise in a Docker container",
   "main": "index.js",
   "scripts": {
-    "configure": "node ./bin/configure.js"
+    "configure": "node ./bin/configure.js",
+    "release": "standard-version"
   },
   "bin": "./bin/configure.js",
   "repository": {
@@ -24,5 +25,8 @@
   "dependencies": {
     "ndm": "^3.10.0",
     "npme": "^1.1.2"
+  },
+  "devDependencies": {
+    "standard-version": "^2.2.1"
   }
 }
