@@ -144,13 +144,13 @@ components:
         static_val: '{{repl ConfigOption "secret" }}'
         is_excluded_from_support: true
       - name: AUTHENTICATION_METHOD
-        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}sso{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl ConfigOption "authentication" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
+        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}sso{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_bitbucket"}}bitbucket{{repl else}}{{repl ConfigOption "authentication" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
         is_excluded_from_support: true
       - name: AUTHORIZATION_METHOD
-        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}sso{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl ConfigOption "authorization" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
+        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}sso{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_bitbucket"}}bitbucket{{repl else}}{{repl ConfigOption "authorization" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
         is_excluded_from_support: true
       - name: SESSION_HANDLER
-        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}redis{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}sso{{repl else}}{{repl ConfigOption "session" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
+        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}redis{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}sso{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_bitbucket"}}bitbucket{{repl else}}{{repl ConfigOption "session" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
         is_excluded_from_support: true
       - name: REJECT_UNAUTHORIZED
         static_val: '{{repl if ConfigOptionEquals "reject_unauthorized" "reject_unauthorized_no" }}0{{repl else }}1{{repl end }}'
@@ -174,6 +174,14 @@ components:
         static_val: '{{repl ConfigOption "saml_sso_login_url" }}'
       - name: SSO_LOGOUT_URL
         static_val: '{{repl ConfigOption "saml_sso_logout_url" }}'
+      - name: BITBUCKET_CLIENT_ID
+        static_val: '{{repl ConfigOption "bitbucket_client_id" }}'
+        is_excluded_from_support: true
+      - name: BITBUCKET_CLIENT_SECRET
+        static_val: '{{repl ConfigOption "bitbucket_client_secret" }}'
+        is_excluded_from_support: true
+      - name: BITBUCKET_TEAM
+        static_val: '{{repl ConfigOption "bitbucket_team" }}'
     ports:
     - private_port: '5000'
       public_port: '5000'
@@ -1028,6 +1036,8 @@ config:
       title: Open
     - name: auth_type_github
       title: GitHub
+    - name: auth_type_bitbucket
+      title: Bitbucket
     - name: auth_type_ldap
       title: LDAP
     - name: auth_type_saml
@@ -1047,7 +1057,7 @@ config:
   description: Configure npm Enterprise to authenticate against a GitHub server
   items:
   - name: github_org
-    title: Github Organization (optionally lock down publishes to a single GitHub organization)
+    title: GitHub Organization (optionally lock down publishes to a single GitHub organization)
     default: ''
     type: text
   - name: github_type
@@ -1090,6 +1100,35 @@ config:
       recommended: true
       type: text
       required: false
+- name: bitbucket
+  when: auth_source=auth_type_bitbucket
+  title: Bitbucket Integration
+  description: Configure npm Enterprise to authenticate against Bitbucket
+  items:
+  - name: bitbucket_team
+    title: Bitbucket Team (optionally lock down publishes to a single Bitbucket team)
+    default: ''
+    type: text
+  - name: bitbucket_type
+    default: bitbucket_type_cloud
+    type: select_one
+    items:
+    - name: bitbucket_type_cloud
+      title: bitbucket.org
+  - name: bitbucket_client_desc
+    when: bitbucket_type=bitbucket_type_cloud
+    type: label
+    value: Create an OAuth consumer at `https://bitbucket.org/account/user/{team}/api`:<br/>1. Click the **Add consumer** button<br/>2. Enter a name like "npm Enterprise"<br/>3. Enter `npm://` for the Callback URL<br/>4. Select the following permissions:<br/>&nbsp;&nbsp;- Account &gt; Read<br/>&nbsp;&nbsp;- Team membership &gt; Read<br/>&nbsp;&nbsp;- Repositories &gt; Read<br/>5. Click the **Save** button<br/>6. Click the consumer name to expand its details<br/>7. Copy the Key and Secret and paste below.<br/>See [Bitbucket's documentation](https://confluence.atlassian.com/bitbucket/oauth-on-bitbucket-cloud-238027431.html#OAuthonBitbucketCloud-Createaconsumer) for further details.
+  - name: bitbucket_client_id
+    title: Bitbucket OAuth Consumer Key
+    when: bitbucket_type=bitbucket_type_cloud
+    type: text
+    required: true
+  - name: bitbucket_client_secret
+    title: Bitbucket OAuth Consumer Secret
+    when: bitbucket_type=bitbucket_type_cloud
+    type: text
+    required: true
 - name: ldap_settings
   title: LDAP Server Settings
   when: auth_source=auth_type_ldap
