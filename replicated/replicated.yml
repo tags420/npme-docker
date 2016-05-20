@@ -14,7 +14,7 @@ admin_commands:
   component: npme
   image:
     image_name: npm-auth-ws
-    version: '2.3.2'
+    version: '2.4.0'
 - alias: update-license
   command: [sh, /usr/local/bin/npme-update-license.sh]
   run_type: exec
@@ -118,7 +118,7 @@ components:
     support_files: []
   - source: replicated
     image_name: npm-auth-ws
-    version: '2.3.2'
+    version: '2.4.0'
     privileged: false
     restart:
       policy: on-failure
