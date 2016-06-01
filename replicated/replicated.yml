@@ -14,7 +14,7 @@ admin_commands:
   component: npme
   image:
     image_name: npm-auth-ws
-    version: '2.4.0'
+    version: '2.4.1'
 - alias: update-license
   command: [sh, /usr/local/bin/npme-update-license.sh]
   run_type: exec
@@ -49,21 +49,21 @@ admin_commands:
   component: npme
   image:
     image_name: newww
-    version: '3.4.1'
+    version: '3.4.2'
 - alias: addon
   command: [sh, /etc/npme/install-addon.sh]
   run_type: exec
   component: npme
   image:
     image_name: newww
-    version: '3.4.1'
+    version: '3.4.2'
 - alias: addon-remove
   command: [sh, /etc/npme/remove-addon.sh]
   run_type: exec
   component: npme
   image:
     image_name: newww
-    version: '3.4.1'
+    version: '3.4.2'
 - alias: ssh
   run_type: exec
   command: [/bin/sh]
@@ -118,7 +118,7 @@ components:
     support_files: []
   - source: replicated
     image_name: npm-auth-ws
-    version: '2.4.0'
+    version: '2.4.1'
     privileged: false
     restart:
       policy: on-failure
@@ -687,7 +687,7 @@ components:
     support_files: []
   - source: replicated
     image_name: newww
-    version: '3.4.1'
+    version: '3.4.2'
     privileged: false
     restart:
       policy: on-failure
@@ -1263,7 +1263,8 @@ config:
   - name: saml_certificate
     title: Identity Provider Certificate (Base64 Encode PEM Format)
     default: ''
-    type: hidden
+    type: text
+    hidden: true
   - name: saml_certificate_raw
     title: Identity Provider Certificate
     type: textarea
