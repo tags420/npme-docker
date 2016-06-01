@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.3.0"></a>
+# [1.3.0](https://github.com/bcoe/npme-docker/compare/v1.1.0...v1.3.0) (2016-06-01)
+
+
+### Bug Fixes
+
+* update newww, and npm-auth-ws to suppress redis warnings ([#75](https://github.com/bcoe/npme-docker/issues/75)) ([980b78f](https://github.com/bcoe/npme-docker/commit/980b78f))
+
+
+### Features
+
+* bitbucket support for website login, better named github tokens ([#74](https://github.com/bcoe/npme-docker/issues/74)) ([d3b65ef](https://github.com/bcoe/npme-docker/commit/d3b65ef))
+* upgrading to annotation-api version that posts package JSON ([#73](https://github.com/bcoe/npme-docker/issues/73)) ([8e07f02](https://github.com/bcoe/npme-docker/commit/8e07f02))
+
+
+
 <a name="1.2.0"></a>
 # 1.2.0 (2016-05-20)
 
