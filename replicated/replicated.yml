@@ -49,21 +49,21 @@ admin_commands:
   component: npme
   image:
     image_name: newww
-    version: '3.4.2'
+    version: '3.5.0'
 - alias: addon
   command: [sh, /etc/npme/install-addon.sh]
   run_type: exec
   component: npme
   image:
     image_name: newww
-    version: '3.4.2'
+    version: '3.5.0'
 - alias: addon-remove
   command: [sh, /etc/npme/remove-addon.sh]
   run_type: exec
   component: npme
   image:
     image_name: newww
-    version: '3.4.2'
+    version: '3.5.0'
 - alias: ssh
   run_type: exec
   command: [/bin/sh]
@@ -687,7 +687,7 @@ components:
     support_files: []
   - source: replicated
     image_name: newww
-    version: '3.4.2'
+    version: '3.5.0'
     privileged: false
     restart:
       policy: on-failure
