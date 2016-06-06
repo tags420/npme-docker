@@ -17,7 +17,7 @@ RUN apk add python
 RUN apk add make
 RUN apk add g++
 RUN npm install node-gyp -g
-RUN npm install @npm/website@4.1.0-alpha3
+RUN npm install @npm/website@4.1.0-alpha4
 RUN npm install @npm/npmo-web-proxy
 RUN npm install @npm/npmo-auth-callbacks
 RUN npm install @npm/annotation-api@1.5.0
