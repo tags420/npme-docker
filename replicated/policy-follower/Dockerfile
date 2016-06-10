@@ -11,7 +11,7 @@ COPY ./replicated/policy-follower/reset-follower.sh /etc/npme/reset-follower.sh
 WORKDIR /etc/npme
 
 RUN echo '@npm:registry=https://enterprise.npmjs.com/' > ~/.npmrc
-RUN npm install @npm/policy-follower
+RUN npm install @npm/policy-follower@1.2.0
 RUN npm install @npm/package-whitelist
 RUN apk update
 RUN apk add curl
