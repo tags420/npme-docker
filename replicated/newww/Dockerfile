@@ -20,7 +20,7 @@ RUN npm install node-gyp -g
 RUN npm install @npm/website@4.1.0-alpha4
 RUN npm install @npm/npmo-web-proxy
 RUN npm install @npm/npmo-auth-callbacks
-RUN npm install @npm/annotation-api@1.5.0
+RUN npm install @npm/annotation-api@1.6.0
 RUN npm install npm-explicit-installs@4.0.1
 RUN npm install oauth2-server-pg@1.5.0
 RUN apk del python
