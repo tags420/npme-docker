@@ -1,5 +1,5 @@
 # Set the base image to Ubuntu
-FROM mhart/alpine-node:4.4.3
+FROM mhart/alpine-node:4.4.5
 
 # File Author / Maintainer
 MAINTAINER Ben Coe
@@ -12,7 +12,7 @@ WORKDIR /etc/npme
 
 RUN echo '@npm:registry=https://enterprise.npmjs.com/' > ~/.npmrc
 RUN npm install @npm/policy-follower@1.2.0
-RUN npm install @npm/package-whitelist
+RUN npm install @npm/package-whitelist@0.1.3
 RUN apk update
 RUN apk add curl
 RUN rm -rf /var/cache/apk/*
