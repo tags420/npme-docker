@@ -28,21 +28,21 @@ admin_commands:
   component: npme
   image:
     image_name: policy-follower
-    version: '2.2.1'
+    version: '2.2.2'
 - alias: add-package
   command: [sh, /etc/npme/add-package.sh]
   run_type: exec
   component: npme
   image:
     image_name: policy-follower
-    version: '2.2.1'
+    version: '2.2.2'
 - alias: remove-package
   command: [sh, /etc/npme/remove-package.sh]
   run_type: exec
   component: npme
   image:
     image_name: policy-follower
-    version: '2.2.1'
+    version: '2.2.2'
 - alias: edit-homepage
   command: [sh, /etc/npme/homepage.sh]
   run_type: exec
@@ -92,6 +92,9 @@ components:
   tags: []
   conflicts: []
   cluster: false
+  logs:
+    max_files: 5
+    max_size: 25m
   containers:
   - source: replicated
     image_name: nginx
@@ -227,7 +230,7 @@ components:
     support_files: []
   - source: replicated
     image_name: policy-follower
-    version: '2.2.1'
+    version: '2.2.2'
     privileged: false
     restart:
       policy: on-failure
