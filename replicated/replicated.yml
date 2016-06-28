@@ -528,7 +528,7 @@ components:
         is_excluded_from_support: true
     ports:
     - private_port: "8080"
-      public_port: "8080"
+      public_port: '{{repl ConfigOption "registry_port" }}'
       port_type: tcp
       when: ""
     volumes:
@@ -847,10 +847,21 @@ config:
   title: "General"
   description: "Configure your npm Enterprise installation"
   items:
-  - name: canonical_url
-    title: Full URL of npm Enterprise registry (8080 must stay constant, you may optionally change the IP to a pretty host name)
+  - name: registry_base_url
+    title: Registry Base URL
     type: text
-    value: http://{{repl ConfigOption "publicip" }}:8080
+    value: http://{{repl ConfigOption "publicip" }}
+    affix: left
+  - name: registry_port
+    title: Registry Port
+    type: text
+    value: 8080
+    affix: right
+  - name: canonical_url
+    title: Full URL of npm Enterprise registry
+    type: text
+    value: '{{repl ConfigOption "registry_base_url" }}:{{repl ConfigOption "registry_port" }}'
+    readonly: true
   - name: website_url
     title: Full URL of npm Enterprise website (8081 must stay constant, you may optionally change the IP to a pretty host name)
     type: text
