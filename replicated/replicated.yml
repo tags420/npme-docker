@@ -847,21 +847,14 @@ config:
   title: "General"
   description: "Configure your npm Enterprise installation"
   items:
-  - name: registry_base_url
-    title: Registry Base URL
-    type: text
-    value: http://{{repl ConfigOption "publicip" }}
-    affix: left
-  - name: registry_port
-    title: Registry Port
-    type: text
-    value: 8080
-    affix: right
   - name: canonical_url
-    title: Full URL of npm Enterprise registry
+    title: Registry URL (This may point to the registry itself or a service fronting the registry)
     type: text
-    default: '{{repl ConfigOption "registry_base_url" }}:{{repl ConfigOption "registry_port" }}'
-    readonly: true
+    value: http://{{repl ConfigOption "publicip" }}:8080
+  - name: registry_port
+    title: Registry Port (Which port the registry should bind to on the host, regardless of URL)
+    type: text
+    default: 8080
   - name: website_url
     title: Full URL of npm Enterprise website (8081 must stay constant, you may optionally change the IP to a pretty host name)
     type: text
