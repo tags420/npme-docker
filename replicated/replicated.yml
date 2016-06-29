@@ -860,7 +860,7 @@ config:
   - name: canonical_url
     title: Full URL of npm Enterprise registry
     type: text
-    value: '{{repl ConfigOption "registry_base_url" }}:{{repl ConfigOption "registry_port" }}'
+    default: '{{repl ConfigOption "registry_base_url" }}:{{repl ConfigOption "registry_port" }}'
     readonly: true
   - name: website_url
     title: Full URL of npm Enterprise website (8081 must stay constant, you may optionally change the IP to a pretty host name)
