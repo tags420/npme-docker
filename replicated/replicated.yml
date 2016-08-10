@@ -14,14 +14,14 @@ admin_commands:
   component: npme
   image:
     image_name: npm-auth-ws
-    version: '2.4.1'
+    version: '2.6.0'
 - alias: update-license
   command: [sh, /usr/local/bin/npme-update-license.sh]
   run_type: exec
   component: npme
   image:
     image_name: npme
-    version: '2.0.6'
+    version: '2.1.0'
 - alias: reset-follower
   command: [sh, /etc/npme/reset-follower.sh]
   run_type: exec
@@ -49,28 +49,28 @@ admin_commands:
   component: npme
   image:
     image_name: newww
-    version: '3.7.4'
+    version: '3.9.2'
 - alias: addon
   command: [sh, /etc/npme/install-addon.sh]
   run_type: exec
   component: npme
   image:
     image_name: newww
-    version: '3.7.4'
+    version: '3.9.2'
 - alias: addon-remove
   command: [sh, /etc/npme/remove-addon.sh]
   run_type: exec
   component: npme
   image:
     image_name: newww
-    version: '3.7.4'
+    version: '3.9.2'
 - alias: ssh
   run_type: exec
   command: [/bin/sh]
   component: npme
   image:
     image_name: npme
-    version: '2.0.6'
+    version: '2.1.0'
 state:
   ready: null
 backup:
@@ -121,7 +121,7 @@ components:
     support_files: []
   - source: replicated
     image_name: npm-auth-ws
-    version: '2.4.1'
+    version: '2.6.0'
     privileged: false
     restart:
       policy: on-failure
@@ -147,13 +147,13 @@ components:
         static_val: '{{repl ConfigOption "secret" }}'
         is_excluded_from_support: true
       - name: AUTHENTICATION_METHOD
-        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}sso{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_bitbucket"}}bitbucket{{repl else}}{{repl ConfigOption "authentication" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
+        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_oauth2"}}oauth2{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}sso{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_bitbucket"}}bitbucket{{repl else}}{{repl ConfigOption "authentication" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
         is_excluded_from_support: true
       - name: AUTHORIZATION_METHOD
-        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}sso{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_bitbucket"}}bitbucket{{repl else}}{{repl ConfigOption "authorization" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
+        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_oauth2"}}oauth2{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}sso{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_bitbucket"}}bitbucket{{repl else}}{{repl ConfigOption "authorization" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
         is_excluded_from_support: true
       - name: SESSION_HANDLER
-        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}redis{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}sso{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_bitbucket"}}bitbucket{{repl else}}{{repl ConfigOption "session" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
+        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_oauth2"}}oauth2{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}redis{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}sso{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_bitbucket"}}bitbucket{{repl else}}{{repl ConfigOption "session" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
         is_excluded_from_support: true
       - name: REJECT_UNAUTHORIZED
         static_val: '{{repl if ConfigOptionEquals "reject_unauthorized" "reject_unauthorized_no" }}0{{repl else }}1{{repl end }}'
@@ -185,6 +185,26 @@ components:
         is_excluded_from_support: true
       - name: BITBUCKET_TEAM
         static_val: '{{repl ConfigOption "bitbucket_team" }}'
+      - name: OAUTH2_CLIENT_ID
+        static_val: '{{repl ConfigOption "oauth2_client_id" }}'
+      - name: OAUTH2_CLIENT_SECRET
+        static_val: '{{repl ConfigOption "oauth2_client_secret" }}'
+      - name: OAUTH2_SITE
+        static_val: '{{repl ConfigOption "oauth2_client_site" }}'
+      - name: OAUTH2_TOKEN_PATH
+        static_val: '{{repl ConfigOption "oauth2_token_path" }}'
+      - name: OAUTH2_AUTHORIZATION_PATH
+        static_val: '{{repl ConfigOption "oauth2_authorization_path" }}'
+      - name: OAUTH2_REDIRECT_URI
+        static_val: '{{repl ConfigOption "oauth2_redirect_uri" }}'
+      - name: OAUTH2_SCOPE
+        static_val: '{{repl ConfigOption "oauth2_scope" }}'
+      - name: OAUTH2_PROFILE
+        static_val: '{{repl ConfigOption "oauth2_profile_url" }}'
+      - name: OAUTH2_EMAIL_KEY
+        static_val: '{{repl ConfigOption "oauth2_email_key" }}'
+      - name: OAUTH2_USER_KEY
+        static_val: '{{repl ConfigOption "oauth2_user_key" }}'
     ports:
     - private_port: '5000'
       public_port: '5000'
@@ -404,7 +424,7 @@ components:
     support_files: []
   - source: replicated
     image_name: npme
-    version: '2.0.6'
+    version: '2.1.0'
     privileged: false
     restart:
       policy: on-failure
@@ -473,13 +493,13 @@ components:
         static_val: '{{repl ConfigOption "secret" }}'
         is_excluded_from_support: true
       - name: AUTHENTICATION_METHOD
-        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}saml{{repl else}}{{repl ConfigOption "authentication" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
+        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_oauth2"}}oauth2{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}sso{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_bitbucket"}}bitbucket{{repl else}}{{repl ConfigOption "authentication" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
         is_excluded_from_support: true
       - name: AUTHORIZATION_METHOD
-        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}saml{{repl else}}{{repl ConfigOption "authorization" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
+        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_oauth2"}}oauth2{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}sso{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_bitbucket"}}bitbucket{{repl else}}{{repl ConfigOption "authorization" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
         is_excluded_from_support: true
       - name: SESSION_HANDLER
-        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}redis{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}saml{{repl else}}{{repl ConfigOption "session" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
+        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_oauth2"}}oauth2{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}redis{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}sso{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_bitbucket"}}bitbucket{{repl else}}{{repl ConfigOption "session" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
         is_excluded_from_support: true
       - name: REJECT_UNAUTHORIZED
         static_val: '{{repl if ConfigOptionEquals "reject_unauthorized" "reject_unauthorized_no" }}0{{repl else }}1{{repl end }}'
@@ -525,6 +545,9 @@ components:
         is_excluded_from_support: true
       - name: WHITELIST_PATH
         static_val: '/etc/npme/data/whitelist'
+        is_excluded_from_support: true
+      - name: DISABLE_PUBLISHES
+        static_val: '{{repl if ConfigOptionEquals "allowpublishes" "allowpublishes_ro" }}all{{repl else }}{{repl if ConfigOptionEquals "allowpublishes" "allowpublishes_scoped" }}public{{repl else }}{{repl end}}{{repl end}}'
         is_excluded_from_support: true
     ports:
     - private_port: "8080"
@@ -690,7 +713,7 @@ components:
     support_files: []
   - source: replicated
     image_name: newww
-    version: '3.7.4'
+    version: '3.9.2'
     privileged: false
     restart:
       policy: on-failure
@@ -785,7 +808,7 @@ components:
         static_val: '{{repl ConfigOption "secret" }}'
         is_excluded_from_support: true
       - name: AUTHENTICATION_METHOD
-        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}sso{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl ConfigOption "authentication" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
+        static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_oauth2"}}oauth2{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}sso{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_bitbucket"}}bitbucket{{repl else}}{{repl ConfigOption "authentication" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
         is_excluded_from_support: true
       - name: AUTH_WWW
         static_val: '{{repl if ConfigOptionEquals "authwww" "authwww_no" }}{{repl else }}true{{repl end}}'
@@ -796,6 +819,26 @@ components:
         static_val: /etc/npme/node_modules/oauth2-server-pg/config
       - name: BILLING_EMAIL
         static_val: '{{repl LicenseFieldValue "billing_email" }}'
+      - name: OAUTH2_CLIENT_ID
+        static_val: '{{repl ConfigOption "oauth2_client_id" }}'
+      - name: OAUTH2_CLIENT_SECRET
+        static_val: '{{repl ConfigOption "oauth2_client_secret" }}'
+      - name: OAUTH2_SITE
+        static_val: '{{repl ConfigOption "oauth2_client_site" }}'
+      - name: OAUTH2_TOKEN_PATH
+        static_val: '{{repl ConfigOption "oauth2_token_path" }}'
+      - name: OAUTH2_AUTHORIZATION_PATH
+        static_val: '{{repl ConfigOption "oauth2_authorization_path" }}'
+      - name: OAUTH2_REDIRECT_URI
+        static_val: '{{repl ConfigOption "oauth2_redirect_uri" }}'
+      - name: OAUTH2_SCOPE
+        static_val: '{{repl ConfigOption "oauth2_scope" }}'
+      - name: OAUTH2_PROFILE
+        static_val: '{{repl ConfigOption "oauth2_profile_url" }}'
+      - name: OAUTH2_EMAIL_KEY
+        static_val: '{{repl ConfigOption "oauth2_email_key" }}'
+      - name: OAUTH2_USER_KEY
+        static_val: '{{repl ConfigOption "oauth2_user_key" }}'
     ports:
       - private_port: "8081"
         public_port: "8081"
@@ -1027,6 +1070,29 @@ config:
       type: text
       affix: right
       required: false
+- name: allowpublishes
+  title: Publication Settings
+  description: 'What types of package publishes are allowed in this npm Enterprise instance: "All" allows scoped and global packages, "Read Only" blocks all publishes, "Scoped" allows only scoped package publications.'
+  items:
+  - name: allowpublishes
+    type: select_one
+    default: allowpublishes_all
+    items:
+    - name: allowpublishes_all
+      title: All
+      type: text
+      affix: left
+      required: false
+    - name: allowpublishes_ro
+      title: Read Only
+      type: text
+      affix: left
+      required: false
+    - name: allowpublishes_scoped
+      title: Scoped
+      type: text
+      affix: left
+      required: false
 - name: auth
   title: Authentication
   description: How should we authenticate users?
@@ -1045,6 +1111,8 @@ config:
       title: LDAP
     - name: auth_type_saml
       title: SAML
+    - name: auth_type_oauth2
+      title: OAuth2
     - name: auth_type_custom
       title: Custom
 - name: open
@@ -1273,6 +1341,51 @@ config:
     type: textarea
     props:
       rows: 8
+- name: oauth2
+  when: auth_source=auth_type_oauth2
+  title: OAuth2 Integration
+  description: Configure npm Enterprise to work with OAuth 2.0 Providers.
+  items:
+  - name: oauth2_client_id
+    title: Client ID
+    type: text
+    default: ''
+  - name: oauth2_client_secret
+    default: ''
+    title: Client Secret
+    type: text
+  - name: oauth2_client_site
+    default: ''
+    title: API Endpoint (e.g., https://github.com/login)
+    type: text
+  - name: oauth2_token_path
+    title: Token Path
+    default: '/oauth/access_token'
+    type: text
+  - name: oauth2_authorization_path
+    title: Authorization Path
+    default: '/oauth/authorize'
+    type: text
+  - name: oauth2_redirect_uri
+    title: Redirect URI
+    default: 'http://{{repl ConfigOption "publicip" }}:8082/auth/oauth2/callback'
+    type: text
+  - name: oauth2_scope
+    title: Scope
+    default: 'user'
+    type: text
+  - name: oauth2_profile_url
+    title: Profile URL (protected resource to fetch user profile from, .e.g., https://api.github.com/user)
+    default: ''
+    type: text
+  - name: oauth2_email_key
+    title: Email Key (key in profile containing email address, e.g., "email")
+    default: 'email'
+    type: text
+  - name: oauth2_user_key
+    title: User Key (key in profile containing username, e.g., "login")
+    default: 'login'
+    type: text
 - name: custom
   when: auth_source=auth_type_custom
   title: Custom Authentication
