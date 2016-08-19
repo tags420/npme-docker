@@ -590,7 +590,7 @@ components:
     support_files: []
   - source: replicated
     image_name: rr
-    version: '1.1.0'
+    version: '2.0.1'
     privileged: false
     restart:
       policy: on-failure
@@ -604,7 +604,7 @@ components:
           container: rr-service
           action: start
     config_files:
-      - filename: /etc/npme/node_modules/@npm/registry-relational-models/config-development.json
+      - filename: /etc/npme/node_modules/@npm/relational-registry-follower/node_modules/@npm/registry-relational-models/config-development.json
         contents: |-
           {
             "connection": {
@@ -632,7 +632,7 @@ components:
               "max": 7
             }
           }
-      - filename: /etc/npme/node_modules/@npm/registry-relational-models/bootstrap.js
+      - filename: /etc/npme/node_modules/@npm/relational-registry-follower/node_modules/@npm/registry-relational-models/bootstrap.js
         contents: |-
           var Promise = require('bluebird')
           var knex = require('knex')

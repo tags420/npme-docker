@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 /usr/sbin/crond
-cd /etc/npme/node_modules/@npm/registry-relational-models/
+cd /etc/npme/node_modules/@npm/relational-registry-follower/node_modules/@npm/registry-relational-models/
 
 node bootstrap.js
 ret=$?
