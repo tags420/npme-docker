@@ -49,21 +49,21 @@ admin_commands:
   component: npme
   image:
     image_name: newww
-    version: '3.9.2'
+    version: '3.11.1'
 - alias: addon
   command: [sh, /etc/npme/install-addon.sh]
   run_type: exec
   component: npme
   image:
     image_name: newww
-    version: '3.9.2'
+    version: '3.11.1'
 - alias: addon-remove
   command: [sh, /etc/npme/remove-addon.sh]
   run_type: exec
   component: npme
   image:
     image_name: newww
-    version: '3.9.2'
+    version: '3.11.1'
 - alias: ssh
   run_type: exec
   command: [/bin/sh]
@@ -713,7 +713,7 @@ components:
     support_files: []
   - source: replicated
     image_name: newww
-    version: '3.9.2'
+    version: '3.11.1'
     privileged: false
     restart:
       policy: on-failure
@@ -839,6 +839,8 @@ components:
         static_val: '{{repl ConfigOption "oauth2_email_key" }}'
       - name: OAUTH2_USER_KEY
         static_val: '{{repl ConfigOption "oauth2_user_key" }}'
+      - name: NEI_CONFIG_DIRECTORY
+        static_val: /etc/npme/data/npm-explicit-installs
     ports:
       - private_port: "8081"
         public_port: "8081"

@@ -1,14 +1,9 @@
 #!/bin/bash
 
-# whenever we boot a new copy of the docker image, we remove the
-# base copy of npm-explicit-installs and replace it with a copy
-# that is linked on the host machine. This allows permanent edits
-# to be made to the package listing page.
+# default npme-explicit-installs data to the default pacakages.json and logos.json file.
 if [ ! -d "/etc/npme/data/npm-explicit-installs" ]; then
   mv /etc/npme/node_modules/npm-explicit-installs /etc/npme/data/npm-explicit-installs
 fi
-rm -rf /etc/npme/node_modules/@npm/website/node_modules/npm-explicit-installs
-ln -f -s /etc/npme/data/npm-explicit-installs /etc/npme/node_modules/@npm/website/node_modules
 
 { cd /etc/npme/node_modules/@npm/npmo-web-proxy; node ./bin/npmo-web-proxy.js start --auth-host=$AUTH_HOST; } &
 { cd /etc/npme/node_modules/@npm/website; node server.js; } &
