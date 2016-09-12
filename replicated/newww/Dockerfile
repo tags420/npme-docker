@@ -1,8 +1,8 @@
 # Set the base image to Ubuntu
-FROM mhart/alpine-node:4.4.5
+FROM mhart/alpine-node:4.5.0
 
 # File Author / Maintainer
-MAINTAINER Ben Coe
+MAINTAINER Ben Coe <ben@npmjs.com>
 
 WORKDIR /etc/npme
 COPY ./replicated/newww/start.sh /etc/npme/start.sh
@@ -19,7 +19,7 @@ RUN apk add g++
 RUN npm install node-gyp -g
 RUN npm install @npm/website@4.1.0-alpha9
 RUN npm install @npm/npmo-web-proxy@1.6.1
-RUN npm install @npm/npmo-auth-callbacks@2.2.1
+RUN npm install @npm/npmo-auth-callbacks@2.3.0
 RUN npm install @npm/annotation-api@1.6.0
 RUN npm install npm-explicit-installs@4.1.0
 RUN npm install oauth2-server-pg@1.5.0
