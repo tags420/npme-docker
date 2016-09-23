@@ -21,7 +21,7 @@ admin_commands:
   component: npme
   image:
     image_name: npme
-    version: '2.1.1'
+    version: '2.2.0'
 - alias: reset-follower
   command: [sh, /etc/npme/reset-follower.sh]
   run_type: exec
@@ -70,7 +70,7 @@ admin_commands:
   component: npme
   image:
     image_name: npme
-    version: '2.1.1'
+    version: '2.2.0'
 state:
   ready: null
 backup:
@@ -424,7 +424,7 @@ components:
     support_files: []
   - source: replicated
     image_name: npme
-    version: '2.1.1'
+    version: '2.2.0'
     privileged: false
     restart:
       policy: on-failure
@@ -438,47 +438,6 @@ components:
       trigger: container-start
       data: ""
       subscriptions: []
-    config_files:
-    - filename: /etc/npme/install-couch-app.sh
-      contents: |-
-        #!/bin/bash
-        cd /etc/npme/node_modules/npm-registry-couchapp
-
-        # wait for CouchDB to be online before we put the documents.
-        # note that username and password on CouchDB are both admin.
-        until $(curl --output /dev/null --silent --head --fail http://{{repl ThisHostInterfaceAddress "docker0" }}:5984/); do
-            printf '.'
-            sleep 2
-        done
-
-        curl -XPUT http://admin:admin@{{repl ThisHostInterfaceAddress "docker0" }}:5984/registry
-        DEPLOY_VERSION=testing npm start --npm-registry-couchapp:couch=http://admin:admin@{{repl ThisHostInterfaceAddress "docker0" }}:5984/registry
-        npm run load --npm-registry-couchapp:couch=http://admin:admin@{{repl ThisHostInterfaceAddress "docker0" }}:5984/registry
-        NO_PROMPT=true npm run copy --npm-registry-couchapp:couch=http://admin:admin@{{repl ThisHostInterfaceAddress "docker0" }}:5984/registry
-    - filename: /usr/local/bin/npme-update-license.sh
-      contents: |-
-        #!/bin/bash
-        echo -n "[?] enter your billing email: "
-        read billing_email
-        echo -n "[?] enter your license key: "
-        read license_key
-
-        http_code=$(curl -s -o /dev/null -w "%{http_code}" -k -X POST --data-urlencode "billing_email=$billing_email" --data-urlencode "license_key=$license_key" ${REPLICATED_INTEGRATIONAPI}/license/v1/sync_with_data)
-
-        if [ $http_code -eq 404 ]; then
-          echo "  license was not found"
-        elif [ $http_code -eq 403 ]; then
-          echo "  license is expired"
-        elif [ $http_code -eq 204 ]; then
-          echo "  license updated \\o/"
-          echo "  restarting npmE..."
-          curl -k -X POST ${REPLICATED_INTEGRATIONAPI}/license/v1/restart
-        else
-          echo "  error updating license"
-        fi
-    - filename: /etc/npme/.license.json
-      contents: |-
-        {{repl LicenseFieldValue "license_json" }}
     customer_files: []
     env_vars:
       - name: FRONT_DOOR_HOST
@@ -548,6 +507,9 @@ components:
         is_excluded_from_support: true
       - name: DISABLE_PUBLISHES
         static_val: '{{repl if ConfigOptionEquals "allowpublishes" "allowpublishes_ro" }}all{{repl else }}{{repl if ConfigOptionEquals "allowpublishes" "allowpublishes_scoped" }}public{{repl else }}{{repl end}}{{repl end}}'
+        is_excluded_from_support: true
+      - name: LICENSE_FIELD
+        static_val: '{{repl LicenseFieldValue "license_json" }}'
         is_excluded_from_support: true
     ports:
     - private_port: "8080"

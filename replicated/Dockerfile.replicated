@@ -5,6 +5,8 @@ FROM mhart/alpine-node:4.3.1
 MAINTAINER Ben Coe
 
 COPY ./replicated/start.sh /etc/npme/start.sh
+COPY ./replicated/npme-update-license.sh /usr/local/bin/npme-update-license.sh
+COPY ./replicated/install-couch-app.sh /etc/npme/install-couch-app.sh
 WORKDIR /etc/npme
 
 RUN echo '@npm:registry=https://enterprise.npmjs.com/' > ~/.npmrc
