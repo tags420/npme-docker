@@ -9,7 +9,10 @@ COPY ./replicated/registry-follower/aggregate /etc/periodic/15min/aggregate
 WORKDIR /etc/npme
 
 RUN echo '@npm:registry=https://enterprise.npmjs.com/' > ~/.npmrc
-RUN npm install @npm/relational-registry-follower@2.2.1
+RUN npm install @npm/relational-registry-follower@2.4.1
+COPY ./replicated/registry-follower/config-development.js /etc/npme/node_modules/@npm/relational-registry-follower/node_modules/@npm/registry-relational-models/config-development.js
+COPY ./replicated/registry-follower/config-development.js /etc/npme/node_modules/@npm/relational-registry-follower/config-development.js
+COPY ./replicated/registry-follower/bootstrap.js /etc/npme/node_modules/@npm/relational-registry-follower/node_modules/@npm/registry-relational-models/bootstrap.js
 RUN apk update
 RUN apk add curl
 RUN apk add bash

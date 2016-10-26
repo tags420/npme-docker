@@ -552,7 +552,7 @@ components:
     support_files: []
   - source: replicated
     image_name: rr
-    version: '2.0.1'
+    version: '2.1.2'
     privileged: false
     restart:
       policy: on-failure
@@ -565,72 +565,11 @@ components:
         - component: npme
           container: rr-service
           action: start
-    config_files:
-      - filename: /etc/npme/node_modules/@npm/relational-registry-follower/node_modules/@npm/registry-relational-models/config-development.json
-        contents: |-
-          {
-            "connection": {
-              "driver": "pg",
-              "user": "postgres",
-              "host": "{{repl ThisHostInterfaceAddress "docker0" }}",
-              "database": "registry_relational"
-            },
-            "pool": {
-              "min": 0,
-              "max": 7
-            }
-          }
-      - filename: /etc/npme/node_modules/@npm/relational-registry-follower/config-development.json
-        contents: |-
-          {
-            "connection": {
-              "driver": "pg",
-              "user": "postgres",
-              "host": "{{repl ThisHostInterfaceAddress "docker0" }}",
-              "database": "registry_relational"
-            },
-            "pool": {
-              "min": 0,
-              "max": 7
-            }
-          }
-      - filename: /etc/npme/node_modules/@npm/relational-registry-follower/node_modules/@npm/registry-relational-models/bootstrap.js
-        contents: |-
-          var Promise = require('bluebird')
-          var knex = require('knex')
-          var c = knex({client: 'pg', connection: {driver: 'pg', user: 'postgres', host: '{{repl ThisHostInterfaceAddress "docker0" }}'}})
-
-          function createDb (name) {
-            return new Promise(function (resolve, reject) {
-              return c.raw('CREATE DATABASE ' + name)
-                .then(function () {
-                  console.info('created', name)
-                  resolve()
-                })
-                .catch(function (e) {
-                  if (e.code === '42P04') {
-                    console.info('existed', name)
-                    return resolve()
-                  } else return reject()
-                })
-            })
-          }
-
-          createDb('registry_relational')
-            .then(function () {
-              return createDb('oauth2_server')
-            })
-            .then(function () {
-              process.exit(0)
-            })
-            .catch(function () {
-              process.exit(1)
-            })
+    config_files: []
     customer_files: []
     env_vars:
       - name: DOCKER_ADDR
         static_val: '{{repl ThisHostInterfaceAddress "docker0" }}'
-        is_excluded_from_support: true
       - name: ON_ERROR_CONTINUE
         static_val: true
     ports: []
@@ -640,7 +579,7 @@ components:
     support_files: []
   - source: replicated
     image_name: rr-service
-    version: '1.0.1'
+    version: '1.1.0'
     privileged: false
     restart:
       policy: on-failure
@@ -650,23 +589,11 @@ components:
       trigger: container-start
       data: ""
       subscriptions: []
-    config_files:
-      - filename: /etc/npme/node_modules/@npm/registry-relational-service/config-development.json
-        contents: |-
-          {
-            "connection": {
-              "driver": "pg",
-              "user": "postgres",
-              "host": "{{repl ThisHostInterfaceAddress "docker0" }}",
-              "database": "registry_relational"
-            },
-            "pool": {
-              "min": 0,
-              "max": 7
-            }
-          }
+    config_files: []
     customer_files: []
-    env_vars: []
+    env_vars:
+      - name: DOCKER_ADDR
+        static_val: '{{repl ThisHostInterfaceAddress "docker0" }}'
     ports:
       - private_port: "5005"
         public_port: "5005"
