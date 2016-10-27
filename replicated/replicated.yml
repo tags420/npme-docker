@@ -119,6 +119,16 @@ components:
     - host_path: '{{repl ConfigOption "packages_host_path" }}'
       container_path: /etc/npme/packages
     support_files: []
+    extra_hosts:
+      - hostname: '{{repl ConfigOption "etc_hosts_0_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_0_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_0_ip" "" }}'
+      - hostname: '{{repl ConfigOption "etc_hosts_1_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_1_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_1_ip" "" }}'
+      - hostname: '{{repl ConfigOption "etc_hosts_2_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_2_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_2_ip" "" }}'
   - source: replicated
     image_name: npm-auth-ws
     version: '2.6.1'
@@ -213,6 +223,16 @@ components:
     - host_path: '{{repl ConfigOption "data_host_path" }}'
       container_path: /etc/npme/data
     support_files: []
+    extra_hosts:
+      - hostname: '{{repl ConfigOption "etc_hosts_0_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_0_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_0_ip" "" }}'
+      - hostname: '{{repl ConfigOption "etc_hosts_1_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_1_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_1_ip" "" }}'
+      - hostname: '{{repl ConfigOption "etc_hosts_2_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_2_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_2_ip" "" }}'
   - source: replicated
     image_name: validate-and-store
     version: '3.0.0'
@@ -248,6 +268,16 @@ components:
     - host_path: '{{repl ConfigOption "packages_host_path" }}'
       container_path: /etc/npme/packages
     support_files: []
+    extra_hosts:
+      - hostname: '{{repl ConfigOption "etc_hosts_0_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_0_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_0_ip" "" }}'
+      - hostname: '{{repl ConfigOption "etc_hosts_1_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_1_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_1_ip" "" }}'
+      - hostname: '{{repl ConfigOption "etc_hosts_2_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_2_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_2_ip" "" }}'
   - source: replicated
     image_name: policy-follower
     version: '2.2.4'
@@ -305,6 +335,16 @@ components:
       - host_path: '{{repl ConfigOption "packages_host_path" }}'
         container_path: /etc/npme/packages
     support_files: []
+    extra_hosts:
+      - hostname: '{{repl ConfigOption "etc_hosts_0_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_0_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_0_ip" "" }}'
+      - hostname: '{{repl ConfigOption "etc_hosts_1_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_1_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_1_ip" "" }}'
+      - hostname: '{{repl ConfigOption "etc_hosts_2_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_2_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_2_ip" "" }}'
   - source: public
     image_name: klaemo/couchdb
     version: 1.6.1
@@ -374,6 +414,16 @@ components:
     - host_path: '{{repl ConfigOption "couchdb_host_path" }}'
       container_path: /usr/local/var/lib/couchdb
     support_files: []
+    extra_hosts:
+      - hostname: '{{repl ConfigOption "etc_hosts_0_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_0_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_0_ip" "" }}'
+      - hostname: '{{repl ConfigOption "etc_hosts_1_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_1_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_1_ip" "" }}'
+      - hostname: '{{repl ConfigOption "etc_hosts_2_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_2_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_2_ip" "" }}'
   - source: public
     image_name: redis
     version: 3.0.4
@@ -400,6 +450,16 @@ components:
     - host_path: '{{repl ConfigOption "redis_host_path" }}'
       container_path: /data
     support_files: []
+    extra_hosts:
+      - hostname: '{{repl ConfigOption "etc_hosts_0_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_0_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_0_ip" "" }}'
+      - hostname: '{{repl ConfigOption "etc_hosts_1_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_1_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_1_ip" "" }}'
+      - hostname: '{{repl ConfigOption "etc_hosts_2_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_2_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_2_ip" "" }}'
   - source: public
     image_name: getelk/elasticsearch
     version: 1.5.0-1
@@ -422,6 +482,16 @@ components:
     - host_path: '{{repl ConfigOption "es_host_path" }}'
       container_path: /data
     support_files: []
+    extra_hosts:
+      - hostname: '{{repl ConfigOption "etc_hosts_0_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_0_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_0_ip" "" }}'
+      - hostname: '{{repl ConfigOption "etc_hosts_1_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_1_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_1_ip" "" }}'
+      - hostname: '{{repl ConfigOption "etc_hosts_2_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_2_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_2_ip" "" }}'
   - source: replicated
     image_name: npme
     version: '2.3.0'
@@ -524,6 +594,16 @@ components:
     support_files:
       - filename: /etc/npme/node_modules/@npm/registry-frontdoor/data/usage.txt
     support_commands: []
+    extra_hosts:
+      - hostname: '{{repl ConfigOption "etc_hosts_0_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_0_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_0_ip" "" }}'
+      - hostname: '{{repl ConfigOption "etc_hosts_1_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_1_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_1_ip" "" }}'
+      - hostname: '{{repl ConfigOption "etc_hosts_2_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_2_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_2_ip" "" }}'
   - source: replicated
     image_name: postgres
     version: '9.3'
@@ -550,6 +630,16 @@ components:
     - host_path: '{{repl ConfigOption "postgres_host_path" }}'
       container_path: /var/lib/postgresql/data
     support_files: []
+    extra_hosts:
+      - hostname: '{{repl ConfigOption "etc_hosts_0_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_0_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_0_ip" "" }}'
+      - hostname: '{{repl ConfigOption "etc_hosts_1_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_1_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_1_ip" "" }}'
+      - hostname: '{{repl ConfigOption "etc_hosts_2_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_2_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_2_ip" "" }}'
   - source: replicated
     image_name: rr
     version: '2.1.2'
@@ -577,6 +667,16 @@ components:
     - host_path: '{{repl ConfigOption "data_host_path" }}'
       container_path: /etc/npme/data
     support_files: []
+    extra_hosts:
+      - hostname: '{{repl ConfigOption "etc_hosts_0_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_0_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_0_ip" "" }}'
+      - hostname: '{{repl ConfigOption "etc_hosts_1_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_1_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_1_ip" "" }}'
+      - hostname: '{{repl ConfigOption "etc_hosts_2_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_2_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_2_ip" "" }}'
   - source: replicated
     image_name: rr-service
     version: '1.1.0'
@@ -600,6 +700,16 @@ components:
         interface: docker0
     volumes: []
     support_files: []
+    extra_hosts:
+      - hostname: '{{repl ConfigOption "etc_hosts_0_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_0_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_0_ip" "" }}'
+      - hostname: '{{repl ConfigOption "etc_hosts_1_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_1_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_1_ip" "" }}'
+      - hostname: '{{repl ConfigOption "etc_hosts_2_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_2_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_2_ip" "" }}'
   - source: replicated
     image_name: newww
     version: '3.12.1'
@@ -743,6 +853,16 @@ components:
       - host_path: '{{repl ConfigOption "data_host_path" }}'
         container_path: /etc/npme/data
     support_files: []
+    extra_hosts:
+      - hostname: '{{repl ConfigOption "etc_hosts_0_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_0_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_0_ip" "" }}'
+      - hostname: '{{repl ConfigOption "etc_hosts_1_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_1_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_1_ip" "" }}'
+      - hostname: '{{repl ConfigOption "etc_hosts_2_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_2_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_2_ip" "" }}'
   - source: replicated
     image_name: es-follower
     version: '2.0.0'
@@ -767,6 +887,16 @@ components:
     ports: []
     volumes: []
     support_files: []
+    extra_hosts:
+      - hostname: '{{repl ConfigOption "etc_hosts_0_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_0_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_0_ip" "" }}'
+      - hostname: '{{repl ConfigOption "etc_hosts_1_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_1_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_1_ip" "" }}'
+      - hostname: '{{repl ConfigOption "etc_hosts_2_host" }}'
+        address: '{{repl ConfigOption "etc_hosts_2_ip" }}'
+        when: '{{repl ConfigOptionNotEquals "etc_hosts_2_ip" "" }}'
 cmds:
 - name: secret_random
   cmd: random
@@ -782,11 +912,11 @@ config:
   description: "Configure your npm Enterprise installation"
   items:
   - name: canonical_url
-    title: Full URL of npm Enterprise registry (8080 must stay constant, you may optionally change the IP to a pretty host name)
+    title: Full URL of npm Enterprise registry (always binds to port 8080, but you may optionally change the IP to a pretty host name)
     type: text
     value: http://{{repl ConfigOption "publicip" }}:8080
   - name: website_url
-    title: Full URL of npm Enterprise website (8081 must stay constant, you may optionally change the IP to a pretty host name)
+    title: Full URL of npm Enterprise website (always binds to port 8081, but you may optionally change the IP to a pretty host name)
     type: text
     value: http://{{repl ConfigOption "publicip" }}:8081
   - name: branding
@@ -837,27 +967,25 @@ config:
     title: Postgres DB data
     type: text
     default: /usr/local/lib/npme/postgres
-- name: scoped_search
-  title: Scoped CLI Search
-  description: Should npm search be enabled for scoped modules?
+- name: couch_url_remote
+  title: Upstream Registry
+  description: Which upstream registry should we replicate from?
   items:
-  - name: scoped_search
-    type: select_one
-    default: scoped_search_yes
-    items:
-    - name: scoped_search_no
-      title: No
-      type: text
-      affix: left
-      required: false
-    - name: scoped_search_yes
-      title: Yes
-      type: text
-      affix: right
-      required: false
+  - name: couch_url_remote
+    type: text
+    title: Upstream URL
+    default: https://replicate.npmjs.com
+  - name: remote_shared_fetch_secret
+    title: Upstream secret (only required for replicating from upstream npm Enterprise servers)
+    type: text
+    default: ''
+  - name: remote_policy
+    title: Policy to apply during replication (set to mirror to create a true replica).
+    type: text
+    default: 'white-list'
 - name: read_through_cache
   title: Read Through Cache
-  description: Should missing packages be returned from npmjs.com?
+  description: Should missing packages be returned from the upstream registry?
   items:
   - name: read_through_cache
     type: select_one
@@ -891,22 +1019,54 @@ config:
       type: text
       affix: right
       required: false
-- name: couch_url_remote
-  title: Upstream Registry
-  description: Which upstream registry should we replicate from?
+- name: etc_hosts
+  title: Custom DNS
+  description: Override DNS by adding up to 3 entries to `/etc/hosts` on each container of the appliance
   items:
-  - name: couch_url_remote
+  - name: etc_hosts_0_ip
+    title: IP Address
     type: text
-    title: Upstream URL
-    default: https://replicate.npmjs.com
-  - name: remote_shared_fetch_secret
-    title: Upstream secret (only required for replicating from upstream npm Enterprise servers)
+    affix: left
+    required: false
+  - name: etc_hosts_0_host
+    title: Hostname
     type: text
-    default: ''
-  - name: remote_policy
-    title: Policy to apply during replication (set to mirror to create a true replica).
+    affix: right
+    required: false
+  - name: etc_hosts_1_ip
     type: text
-    default: 'white-list'
+    affix: left
+    required: false
+  - name: etc_hosts_1_host
+    type: text
+    affix: right
+    required: false
+  - name: etc_hosts_2_ip
+    type: text
+    affix: left
+    required: false
+  - name: etc_hosts_2_host
+    type: text
+    affix: right
+    required: false
+- name: scoped_search
+  title: Scoped CLI Search
+  description: Should npm search be enabled for scoped modules?
+  items:
+  - name: scoped_search
+    type: select_one
+    default: scoped_search_yes
+    items:
+    - name: scoped_search_no
+      title: No
+      type: text
+      affix: left
+      required: false
+    - name: scoped_search_yes
+      title: Yes
+      type: text
+      affix: right
+      required: false
 - name: authfetch
   title: Auth Scoped Installs
   description: Should the npm install of a scoped package (@mycompany/foo) require a token?
