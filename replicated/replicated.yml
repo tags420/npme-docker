@@ -49,21 +49,21 @@ admin_commands:
   component: npme
   image:
     image_name: newww
-    version: '3.12.1'
+    version: '3.13.0'
 - alias: addon
   command: [sh, /etc/npme/install-addon.sh]
   run_type: exec
   component: npme
   image:
     image_name: newww
-    version: '3.12.1'
+    version: '3.13.0'
 - alias: addon-remove
   command: [sh, /etc/npme/remove-addon.sh]
   run_type: exec
   component: npme
   image:
     image_name: newww
-    version: '3.12.1'
+    version: '3.13.0'
 - alias: ssh
   run_type: exec
   command: [/bin/sh]
@@ -712,7 +712,7 @@ components:
         when: '{{repl ConfigOptionNotEquals "etc_hosts_2_ip" "" }}'
   - source: replicated
     image_name: newww
-    version: '3.12.1'
+    version: '3.13.0'
     privileged: false
     restart:
       policy: on-failure
@@ -763,20 +763,6 @@ components:
           NEW_RELIC_LOG_LEVEL=a
           NEW_RELIC_NO_CONFIG_FILE=a
           PROMOTION_GA_DIMENSIONS=a
-      - filename: /etc/npme/node_modules/oauth2-server-pg/config.json
-        contents: |-
-          {
-            "connection": {
-              "driver": "pg",
-              "user": "postgres",
-              "host": "{{repl ThisHostInterfaceAddress "docker0" }}",
-              "database": "oauth2_server"
-            },
-            "pool": {
-              "min": 0,
-              "max": 7
-            }
-          }
     customer_files: []
     env_vars:
       - name: CERTIFICATE
@@ -840,6 +826,8 @@ components:
         static_val: '{{repl ConfigOption "oauth2_user_key" }}'
       - name: NEI_CONFIG_DIRECTORY
         static_val: /etc/npme/data/npm-explicit-installs
+      - name: DOCKER_ADDR
+        static_val: '{{repl ThisHostInterfaceAddress "docker0" }}'
     ports:
       - private_port: "8081"
         public_port: "8081"
