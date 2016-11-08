@@ -22,12 +22,12 @@ RUN npm install @npm/npmo-web-proxy@1.6.2
 RUN npm install @npm/npmo-auth-callbacks@2.3.0
 RUN npm install @npm/annotation-api@1.6.0
 RUN npm install npm-explicit-installs@4.1.0
-RUN npm install oauth2-server-pg@1.6.0
+RUN npm install oauth2-server-pg@1.6.1
 RUN apk del python
 RUN apk del make
 RUN apk del g++
 RUN rm -rf /var/cache/apk/*
 
-COPY ./replicated/newww/config.js /etc/npme/node_modules/oauth2-server-pg/config.js
+COPY ./replicated/newww/config-development.js /etc/npme/node_modules/oauth2-server-pg/config-development.js
 
 CMD ["/etc/npme/start.sh"]
