@@ -828,6 +828,8 @@ components:
         static_val: /etc/npme/data/npm-explicit-installs
       - name: DOCKER_ADDR
         static_val: '{{repl ThisHostInterfaceAddress "docker0" }}'
+      - name: DB_CONFIG
+        static_val: './config-development.js'
     ports:
       - private_port: "8081"
         public_port: "8081"
