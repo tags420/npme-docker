@@ -800,8 +800,6 @@ components:
         is_excluded_from_support: true
       - name: AUTH_HOST
         static_val: 'http://{{repl ThisHostInterfaceAddress "docker0" }}:5000'
-      - name: DB_CONFIG
-        static_val: /etc/npme/node_modules/oauth2-server-pg/config
       - name: BILLING_EMAIL
         static_val: '{{repl LicenseFieldValue "billing_email" }}'
       - name: OAUTH2_CLIENT_ID
