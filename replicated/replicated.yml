@@ -21,56 +21,56 @@ admin_commands:
   component: npme
   image:
     image_name: npme
-    version: '2.3.0'
+    version: '2.4.0'
 - alias: reset-follower
   command: [sh, /etc/npme/reset-follower.sh]
   run_type: exec
   component: npme
   image:
     image_name: policy-follower
-    version: '2.2.4'
+    version: '2.2.5'
 - alias: add-package
   command: [sh, /etc/npme/add-package.sh]
   run_type: exec
   component: npme
   image:
     image_name: policy-follower
-    version: '2.2.4'
+    version: '2.2.5'
 - alias: remove-package
   command: [sh, /etc/npme/remove-package.sh]
   run_type: exec
   component: npme
   image:
     image_name: policy-follower
-    version: '2.2.4'
+    version: '2.2.5'
 - alias: edit-homepage
   command: [sh, /etc/npme/homepage.sh]
   run_type: exec
   component: npme
   image:
     image_name: newww
-    version: '3.13.2'
+    version: '3.13.3'
 - alias: addon
   command: [sh, /etc/npme/install-addon.sh]
   run_type: exec
   component: npme
   image:
     image_name: newww
-    version: '3.13.2'
+    version: '3.13.3'
 - alias: addon-remove
   command: [sh, /etc/npme/remove-addon.sh]
   run_type: exec
   component: npme
   image:
     image_name: newww
-    version: '3.13.2'
+    version: '3.13.3'
 - alias: ssh
   run_type: exec
   command: [/bin/sh]
   component: npme
   image:
     image_name: npme
-    version: '2.3.0'
+    version: '2.4.0'
 state:
   ready: null
 backup:
@@ -280,7 +280,7 @@ components:
         when: '{{repl ConfigOptionNotEquals "etc_hosts_2_ip" "" }}'
   - source: replicated
     image_name: policy-follower
-    version: '2.2.4'
+    version: '2.2.5'
     privileged: false
     restart:
       policy: on-failure
@@ -494,7 +494,7 @@ components:
         when: '{{repl ConfigOptionNotEquals "etc_hosts_2_ip" "" }}'
   - source: replicated
     image_name: npme
-    version: '2.3.0'
+    version: '2.4.0'
     privileged: false
     restart:
       policy: on-failure
@@ -712,7 +712,7 @@ components:
         when: '{{repl ConfigOptionNotEquals "etc_hosts_2_ip" "" }}'
   - source: replicated
     image_name: newww
-    version: '3.13.2'
+    version: '3.13.3'
     privileged: false
     restart:
       policy: on-failure
@@ -827,7 +827,7 @@ components:
       - name: DOCKER_ADDR
         static_val: '{{repl ThisHostInterfaceAddress "docker0" }}'
       - name: DB_CONFIG
-        static_val: '../config-development'
+        static_val: '/etc/npme/node_modules/oauth2-server-pg/config-development'
     ports:
       - private_port: "8081"
         public_port: "8081"

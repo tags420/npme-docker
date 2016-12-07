@@ -1,5 +1,5 @@
 # Set the base image to Ubuntu
-FROM mhart/alpine-node:4.3.1
+FROM mhart/alpine-node:4.6.2
 
 # File Author / Maintainer
 MAINTAINER Ben Coe
@@ -11,7 +11,7 @@ WORKDIR /etc/npme
 
 RUN echo '@npm:registry=https://enterprise.npmjs.com/' > ~/.npmrc
 RUN npm install npm-registry-couchapp@npmo
-RUN npm install @npm/registry-frontdoor@2.9.0
+RUN npm install @npm/registry-frontdoor@2.10.0
 RUN npm install @npm/couch-url-rewrite-proxy@1.2.3
 RUN apk update
 RUN apk add curl
