@@ -27,22 +27,22 @@ admin_commands:
   run_type: exec
   component: npme
   image:
-    image_name: policy-follower
-    version: '2.2.5'
+    image_name: npmjs/policy-follower
+    version: '2.2.6'
 - alias: add-package
   command: [sh, /etc/npme/add-package.sh]
   run_type: exec
   component: npme
   image:
-    image_name: policy-follower
-    version: '2.2.5'
+    image_name: npmjs/policy-follower
+    version: '2.2.6'
 - alias: remove-package
   command: [sh, /etc/npme/remove-package.sh]
   run_type: exec
   component: npme
   image:
-    image_name: policy-follower
-    version: '2.2.5'
+    image_name: npmjs/policy-follower
+    version: '2.2.6'
 - alias: edit-homepage
   command: [sh, /etc/npme/homepage.sh]
   run_type: exec
@@ -99,6 +99,7 @@ components:
   - source: replicated
     image_name: nginx
     version: '1.1.0'
+    name: npme-nginx
     privileged: false
     restart:
       policy: on-failure
@@ -132,6 +133,7 @@ components:
   - source: replicated
     image_name: npm-auth-ws
     version: '2.6.1'
+    name: npme-auth
     privileged: false
     restart:
       policy: on-failure
@@ -236,6 +238,7 @@ components:
   - source: replicated
     image_name: validate-and-store
     version: '3.0.0'
+    name: npme-vands
     privileged: false
     restart:
       policy: on-failure
@@ -278,9 +281,10 @@ components:
       - hostname: '{{repl ConfigOption "etc_hosts_2_host" }}'
         address: '{{repl ConfigOption "etc_hosts_2_ip" }}'
         when: '{{repl ConfigOptionNotEquals "etc_hosts_2_ip" "" }}'
-  - source: replicated
-    image_name: policy-follower
-    version: '2.2.5'
+  - source: public
+    image_name: npmjs/policy-follower
+    version: '2.2.6'
+    name: npme-pf
     privileged: false
     restart:
       policy: on-failure
@@ -348,6 +352,7 @@ components:
   - source: public
     image_name: klaemo/couchdb
     version: 1.6.1
+    name: npme-couch
     restart:
       policy: on-failure
       max: 50000
@@ -427,6 +432,7 @@ components:
   - source: public
     image_name: redis
     version: 3.0.4
+    name: npme-redis
     restart:
       policy: on-failure
       max: 50000
@@ -463,6 +469,7 @@ components:
   - source: public
     image_name: getelk/elasticsearch
     version: 1.5.0-1
+    name: npme-es
     restart:
       policy: on-failure
       max: 50000
@@ -495,6 +502,7 @@ components:
   - source: replicated
     image_name: npme
     version: '2.4.0'
+    name: npme-registry
     privileged: false
     restart:
       policy: on-failure
@@ -607,6 +615,7 @@ components:
   - source: replicated
     image_name: postgres
     version: '9.3'
+    name: npme-pg
     privileged: false
     restart:
       policy: on-failure
@@ -643,6 +652,7 @@ components:
   - source: replicated
     image_name: rr
     version: '2.1.2'
+    name: npme-rr
     privileged: false
     restart:
       policy: on-failure
@@ -680,6 +690,7 @@ components:
   - source: replicated
     image_name: rr-service
     version: '1.1.0'
+    name: npme-rr-service
     privileged: false
     restart:
       policy: on-failure
@@ -713,6 +724,7 @@ components:
   - source: replicated
     image_name: newww
     version: '3.13.3'
+    name: npme-website
     privileged: false
     restart:
       policy: on-failure
@@ -854,6 +866,7 @@ components:
   - source: replicated
     image_name: es-follower
     version: '2.0.0'
+    name: npme-esf
     privileged: false
     restart:
       policy: on-failure
