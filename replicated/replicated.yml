@@ -13,8 +13,8 @@ admin_commands:
   run_type: exec
   component: npme
   image:
-    image_name: npm-auth-ws
-    version: '2.6.1'
+    image_name: npmjs/npm-auth-ws
+    version: '2.7.0'
 - alias: update-license
   command: [sh, /usr/local/bin/npme-update-license.sh]
   run_type: exec
@@ -130,9 +130,9 @@ components:
       - hostname: '{{repl ConfigOption "etc_hosts_2_host" }}'
         address: '{{repl ConfigOption "etc_hosts_2_ip" }}'
         when: '{{repl ConfigOptionNotEquals "etc_hosts_2_ip" "" }}'
-  - source: replicated
-    image_name: npm-auth-ws
-    version: '2.6.1'
+  - source: public
+    image_name: npmjs/npm-auth-ws
+    version: '2.7.0'
     name: npme-auth
     privileged: false
     restart:
@@ -148,31 +148,23 @@ components:
     env_vars:
       - name: FRONT_DOOR_HOST
         static_val: '{{repl ConfigOption "canonical_url" }}'
-        is_excluded_from_support: true
       - name: GITHUB_ORG
         static_val: '{{repl ConfigOption "github_org" }}'
-        is_excluded_from_support: true
       - name: GITHUB_HOST
         static_val: '{{repl if ConfigOptionEquals "github_type" "github_type_public" }}https://api.github.com{{repl else }}{{repl if ConfigOptionEquals "github_enterprise_protocol" "github_enterprise_protocol_https"}}https{{repl else}}http{{repl end}}://{{repl ConfigOption "github_enterprise_host" }}{{repl end}}'
-        is_excluded_from_support: true
       - name: SHARED_FETCH_SECRET
         static_val: '{{repl ConfigOption "secret" }}'
         is_excluded_from_support: true
       - name: AUTHENTICATION_METHOD
         static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_oauth2"}}oauth2{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}sso{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_bitbucket"}}bitbucket{{repl else}}{{repl ConfigOption "authentication" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
-        is_excluded_from_support: true
       - name: AUTHORIZATION_METHOD
         static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_oauth2"}}oauth2{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}sso{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}fake{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_bitbucket"}}bitbucket{{repl else}}{{repl ConfigOption "authorization" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
-        is_excluded_from_support: true
       - name: SESSION_HANDLER
         static_val: '{{repl if ConfigOptionEquals "auth_source" "auth_type_oauth2"}}oauth2{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_github"}}github{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_ldap"}}ldap{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_open"}}redis{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_saml"}}sso{{repl else}}{{repl if ConfigOptionEquals "auth_source" "auth_type_bitbucket"}}bitbucket{{repl else}}{{repl ConfigOption "session" }}{{repl end}}{{repl end}}{{repl end}}{{repl end}}{{repl end}}{{repl end}}'
-        is_excluded_from_support: true
       - name: REJECT_UNAUTHORIZED
         static_val: '{{repl if ConfigOptionEquals "reject_unauthorized" "reject_unauthorized_no" }}0{{repl else }}1{{repl end }}'
-        is_excluded_from_support: true
       - name: LOGIN_CACHE_REDIS
         static_val: 'redis://{{repl ThisHostInterfaceAddress "docker0" }}:6379'
-        is_excluded_from_support: true
       - name: CERTIFICATE
         static_val: '{{repl if ConfigOption "saml_certificate_raw"}}{{repl ConfigOption "saml_certificate_raw" | Base64Encode}}{{repl else}}{{repl ConfigOption "saml_certificate"}}{{repl end }}'
       - name: REDIS_URL
@@ -217,6 +209,10 @@ components:
         static_val: '{{repl ConfigOption "oauth2_email_key" }}'
       - name: OAUTH2_USER_KEY
         static_val: '{{repl ConfigOption "oauth2_user_key" }}'
+      - name: AUTHZ_CACHE_ENABLED
+        static_val: '{{repl if ConfigOptionEquals "authz_cache_enabled" "authz_cache_enabled_yes"}}true{{repl end}}'
+      - name: AUTHZ_CACHE_DEFAULT_TTL_SECONDS
+        static_val: '{{repl ConfigOption "authz_cache_ttl_seconds"}}'
     ports:
     - private_port: '5000'
       public_port: '5000'
@@ -1122,6 +1118,29 @@ config:
       type: text
       affix: right
       required: false
+- name: authcaching
+  title: Auth Caching
+  description: Should successful authorization checks be cached to prevent excessive load on the external auth provider for installs?
+  items:
+  - name: authz_cache_enabled
+    type: select_one
+    default: authz_cache_enabled_no
+    items:
+    - name: authz_cache_enabled_no
+      title: No
+      type: text
+      affix: left
+      required: false
+    - name: authz_cache_enabled_yes
+      title: Yes
+      type: text
+      affix: right
+      required: false
+  - name: authz_cache_ttl_seconds
+    title: Expiration (in seconds) for auth cache entries
+    type: text
+    when: authz_cache_enabled=authz_cache_enabled_yes
+    default: 600
 - name: allowpublishes
   title: Publication Settings
   description: 'What types of package publishes are allowed in this npm Enterprise instance: "All" allows scoped and global packages, "Read Only" blocks all publishes, "Scoped" allows only scoped package publications.'
