@@ -21,7 +21,7 @@ admin_commands:
   component: npme
   image:
     image_name: npme
-    version: '2.4.0'
+    version: '2.4.1'
 - alias: reset-follower
   command: [sh, /etc/npme/reset-follower.sh]
   run_type: exec
@@ -70,7 +70,7 @@ admin_commands:
   component: npme
   image:
     image_name: npme
-    version: '2.4.0'
+    version: '2.4.1'
 state:
   ready: null
 backup:
@@ -497,7 +497,7 @@ components:
         when: '{{repl ConfigOptionNotEquals "etc_hosts_2_ip" "" }}'
   - source: replicated
     image_name: npme
-    version: '2.4.0'
+    version: '2.4.1'
     name: npme-registry
     privileged: false
     restart:
