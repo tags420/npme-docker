@@ -14,7 +14,7 @@ admin_commands:
   component: npme
   image:
     image_name: npmjs/npm-auth-ws
-    version: '2.7.0'
+    version: '2.8.1'
 - alias: update-license
   command: [sh, /usr/local/bin/npme-update-license.sh]
   run_type: exec
@@ -132,7 +132,7 @@ components:
         when: '{{repl ConfigOptionNotEquals "etc_hosts_2_ip" "" }}'
   - source: public
     image_name: npmjs/npm-auth-ws
-    version: '2.7.0'
+    version: '2.8.1'
     name: npme-auth
     privileged: false
     restart:
