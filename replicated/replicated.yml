@@ -435,11 +435,14 @@ components:
     cmd: "[\"redis-server\", \"--appendonly\", \"yes\"]"
     publish_events:
     - name: Container redis started
-      trigger: container-start
-      data: ""
+      trigger: port-listen
+      data: "6379"
       subscriptions:
       - component: npme
         container: npme
+        action: start
+      - component: npme
+        container: newww
         action: start
     config_files: []
     customer_files: []
