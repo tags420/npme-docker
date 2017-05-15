@@ -451,11 +451,11 @@ components:
     - private_port: '6379'
       public_port: '6379'
       interface: docker0
-      when: '{{repl if ConfigOptionEquals "redis_bind_all" "redis_bind_all_no" }}'
+      when: '{{repl ConfigOptionEquals "redis_bind_all" "redis_bind_all_no" }}'
     - private_port: '6379'
       public_port: '6379'
       port_type: tcp
-      when: '{{repl if ConfigOptionEquals "redis_bind_all" "redis_bind_all_yes" }}'
+      when: '{{repl ConfigOptionEquals "redis_bind_all" "redis_bind_all_yes" }}'
     volumes:
     - host_path: '{{repl ConfigOption "redis_host_path" }}'
       container_path: /data
