@@ -451,6 +451,11 @@ components:
     - private_port: '6379'
       public_port: '6379'
       interface: docker0
+      when: '{{repl if ConfigOptionEquals "redis_bind_all" "redis_bind_all_no" }}'
+    - private_port: '6379'
+      public_port: '6379'
+      port_type: tcp
+      when: '{{repl if ConfigOptionEquals "redis_bind_all" "redis_bind_all_yes" }}'
     volumes:
     - host_path: '{{repl ConfigOption "redis_host_path" }}'
       container_path: /data
@@ -983,6 +988,24 @@ config:
     title: Policy to apply during replication (set to mirror to create a true replica).
     type: text
     default: 'white-list'
+- name: redis_bind_all
+  title: Expose Redis for Replication
+  description: Should Redis' replication port (:6379) be exposed (only do this on a closed network).
+  items:
+- name: redis_bind_all
+  type: select_one
+  default: redis_bind_all_no
+  items:
+  - name: redis_bind_all_no
+    title: No
+    type: text
+    affix: left
+    required: false
+  - name: redis_bind_all_yes
+    title: Yes
+    type: text
+    affix: right
+    required: false
 - name: read_through_cache
   title: Read Through Cache
   description: Should missing packages be returned from the upstream registry?
