@@ -450,12 +450,7 @@ components:
     ports:
     - private_port: '6379'
       public_port: '6379'
-      interface: docker0
-      when: '{{repl ConfigOptionEquals "redis_bind_all" "redis_bind_all_no" }}'
-    - private_port: '6379'
-      public_port: '6379'
-      port_type: tcp
-      when: '{{repl ConfigOptionEquals "redis_bind_all" "redis_bind_all_yes" }}'
+      interface: '{{repl if ConfigOptionEquals "redis_bind_all" "redis_bind_all_no" }}docker0{{repl end }}'
     volumes:
     - host_path: '{{repl ConfigOption "redis_host_path" }}'
       container_path: /data
@@ -911,6 +906,8 @@ cmds:
 - name: publicip
   cmd: publicip
   args: []
+- name: setup-redis-replication
+  cmd: "redis-server{{if defined redis_replication_host}} --slaveof {{redis_replication_host}}{{end}}"
 config:
 - name: General
   title: "General"
@@ -1006,6 +1003,13 @@ config:
       type: text
       affix: right
       required: false
+- name: redis_replication_host
+  title: Expose Redis for Replication
+  description: Should Redis' replication port (:6379) be exposed (only do this on a closed network).
+  items:
+  - name: redis_replication_host
+    type: text
+    affix: left
 - name: read_through_cache
   title: Read Through Cache
   description: Should missing packages be returned from the upstream registry?
