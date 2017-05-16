@@ -448,7 +448,7 @@ components:
       - filename: /data/redis.conf
         contents: |-
           appendonly yes
-          {{repl if ConfigOptionEquals "redis_bind_all" "redis_bind_all_yes" }}slaveof {{repl ConfigOption "redis_replication_host" }} 6379{{repl end }}
+          {{repl if ConfigOptionNotEquals "redis_replication_host" "" }}slaveof {{repl ConfigOption "redis_replication_host" }} 6379{{repl end }}
     customer_files: []
     env_vars: []
     ports:
@@ -1013,6 +1013,8 @@ config:
   - name: redis_replication_host
     type: text
     affix: left
+    required: false
+    value: ""
 - name: read_through_cache
   title: Read Through Cache
   description: Should missing packages be returned from the upstream registry?
