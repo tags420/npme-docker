@@ -1006,7 +1006,6 @@ config:
       affix: right
       required: false
 - name: redis_replication_host
-  when: redis_bind_all=redis_bind_all_yes
   title: Upstream Redis
   description: Which upstream Redis should sessions be replicated from?
   items:
