@@ -432,7 +432,7 @@ components:
     restart:
       policy: on-failure
       max: 50000
-    cmd: "[\"redis-server\", \"--appendonly\", \"yes\"]"
+    cmd: "[\"/usr/local/bin/redis-server\", \"/data/redis.conf\"]"
     publish_events:
     - name: Container redis started
       trigger: port-listen
@@ -444,13 +444,17 @@ components:
       - component: npme
         container: newww
         action: start
-    config_files: []
+    config_files:
+      - filename: /data/redis.conf
+        contents: |-
+          appendonly yes
+          {{repl if ConfigOptionNotEquals "redis_replication_host" "" }}slaveof {{repl ConfigOption "redis_replication_host" }} 6379{{repl end }}
     customer_files: []
     env_vars: []
     ports:
     - private_port: '6379'
       public_port: '6379'
-      interface: docker0
+      interface: '{{repl if ConfigOptionNotEquals "redis_bind_all" "redis_bind_all_yes" }}docker0{{repl end }}'
     volumes:
     - host_path: '{{repl ConfigOption "redis_host_path" }}'
       container_path: /data
@@ -983,6 +987,33 @@ config:
     title: Policy to apply during replication (set to mirror to create a true replica).
     type: text
     default: 'white-list'
+- name: redis_bind_all
+  title: Expose Redis for Replication
+  description: Should Redis' replication port (:6379) be exposed (only do this on a closed network).
+  items:
+  - name: redis_bind_all
+    type: select_one
+    default: redis_bind_all_no
+    items:
+    - name: redis_bind_all_no
+      title: No
+      type: text
+      affix: left
+      required: false
+    - name: redis_bind_all_yes
+      title: Yes
+      type: text
+      affix: right
+      required: false
+- name: redis_replication_host
+  title: Upstream Redis
+  description: Which upstream Redis should sessions be replicated from?
+  items:
+  - name: redis_replication_host
+    type: text
+    affix: left
+    required: false
+    value: ""
 - name: read_through_cache
   title: Read Through Cache
   description: Should missing packages be returned from the upstream registry?
