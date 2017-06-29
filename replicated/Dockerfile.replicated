@@ -12,10 +12,17 @@ WORKDIR /etc/npme
 RUN echo '@npm:registry=https://enterprise.npmjs.com/' > ~/.npmrc
 RUN npm install npm-registry-couchapp@npmo
 RUN npm install @npm/registry-frontdoor@2.10.1
-RUN npm install @npm/couch-url-rewrite-proxy@1.2.3
+RUN npm install @npm/couch-url-rewrite-proxy@1.3.0
 RUN apk update
 RUN apk add curl
 RUN apk add bash
+RUN apk add python
+RUN apk add make
+RUN apk add g++
+RUN npm install node-gyp -g
+RUN apk del python
+RUN apk del make
+RUN apk del g++
 RUN rm -rf /var/cache/apk/*
 
 EXPOSE 8080
