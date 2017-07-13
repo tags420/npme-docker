@@ -427,7 +427,7 @@ components:
         when: '{{repl ConfigOptionNotEquals "etc_hosts_2_ip" "" }}'
   - source: public
     image_name: redis
-    version: 3.0.4
+    version: 3.0.7
     name: npme-redis
     restart:
       policy: on-failure
