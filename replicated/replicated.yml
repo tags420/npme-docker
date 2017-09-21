@@ -21,7 +21,7 @@ admin_commands:
   component: npme
   image:
     image_name: npme
-    version: '2.5.0'
+    version: '2.6.3'
 - alias: reset-follower
   command: [sh, /etc/npme/reset-follower.sh]
   run_type: exec
@@ -70,7 +70,7 @@ admin_commands:
   component: npme
   image:
     image_name: npme
-    version: '2.5.0'
+    version: '2.6.3'
 state:
   ready: null
 backup:
@@ -504,7 +504,7 @@ components:
         when: '{{repl ConfigOptionNotEquals "etc_hosts_2_ip" "" }}'
   - source: replicated
     image_name: npme
-    version: '2.5.0'
+    version: '2.6.3'
     name: npme-registry
     privileged: false
     restart:
@@ -521,6 +521,9 @@ components:
       subscriptions: []
     customer_files: []
     env_vars:
+      - name: FRONTDOOR_HOST
+        static_val: '{{repl ConfigOption "canonical_url" }}'
+        is_excluded_from_support: true
       - name: FRONT_DOOR_HOST
         static_val: '{{repl ConfigOption "canonical_url" }}'
         is_excluded_from_support: true
@@ -565,6 +568,9 @@ components:
       - name: COUCH_URL
         static_val: 'http://admin:admin@{{repl ThisHostInterfaceAddress "docker0" }}:5984/registry'
         is_excluded_from_support: true
+      - name: COUCH_URL_CACHE
+        static_val: '{{repl ConfigOption "couch_url_remote" }}'
+        is_excluded_from_support: true
       - name: COUCH_URL_REMOTE
         static_val: '{{repl ConfigOption "couch_url_remote" }}'
         is_excluded_from_support: true
@@ -586,11 +592,20 @@ components:
       - name: WHITELIST_PATH
         static_val: '/etc/npme/data/whitelist'
         is_excluded_from_support: true
+      - name: WHITE_LIST_PATH
+        static_val: '/etc/npme/data/whitelist'
+        is_excluded_from_support: true
       - name: DISABLE_PUBLISHES
         static_val: '{{repl if ConfigOptionEquals "allowpublishes" "allowpublishes_ro" }}all{{repl else }}{{repl if ConfigOptionEquals "allowpublishes" "allowpublishes_scoped" }}public{{repl else }}{{repl end}}{{repl end}}'
         is_excluded_from_support: true
       - name: LICENSE_FIELD
         static_val: '{{repl LicenseFieldValue "license_json" }}'
+        is_excluded_from_support: true
+      - name: LICENSE_PATH
+        static_val: '/etc/npme/.license.json'
+        is_excluded_from_support: true
+      - name: USER_ACL_URL
+        static_val: 'http://{{repl ThisHostInterfaceAddress "docker0" }}:5003'
         is_excluded_from_support: true
     ports:
     - private_port: "8080"
