@@ -56,21 +56,21 @@ admin_commands:
   component: npme
   image:
     image_name: newww
-    version: '3.13.3'
+    version: '3.14.0'
 - alias: addon
   command: [sh, /etc/npme/install-addon.sh]
   run_type: exec
   component: npme
   image:
     image_name: newww
-    version: '3.13.3'
+    version: '3.14.0'
 - alias: addon-remove
   command: [sh, /etc/npme/remove-addon.sh]
   run_type: exec
   component: npme
   image:
     image_name: newww
-    version: '3.13.3'
+    version: '3.14.0'
 - alias: ssh
   run_type: exec
   command: [/bin/sh]
@@ -752,7 +752,7 @@ components:
         when: '{{repl ConfigOptionNotEquals "etc_hosts_2_ip" "" }}'
   - source: replicated
     image_name: newww
-    version: '3.13.3'
+    version: '3.14.0'
     name: npme-website
     privileged: false
     restart:

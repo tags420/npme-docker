@@ -1,5 +1,5 @@
 # Set the base image to Ubuntu
-FROM mhart/alpine-node:4.6.2
+FROM mhart/alpine-node:6.11
 
 # File Author / Maintainer
 MAINTAINER Ben Coe <ben@npmjs.com>
@@ -18,7 +18,7 @@ RUN apk add make
 RUN apk add g++
 RUN npm install node-gyp -g
 RUN npm install @npm/website@4.1.0-alpha9
-RUN npm install @npm/npmo-web-proxy@1.6.3
+RUN npm install @npm/npmo-web-proxy@1.6.4
 RUN npm install @npm/npmo-auth-callbacks@2.3.0
 RUN npm install @npm/annotation-api@1.6.0
 RUN npm install npm-explicit-installs@4.1.0
