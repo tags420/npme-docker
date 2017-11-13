@@ -619,7 +619,7 @@ components:
       public_port: "8080"
       port_type: tcp
       when: ""
-    - private_port: "9999"
+    - private_port: "5000"
       public_port: "9999"
       port_type: tcp
       when: ""
