@@ -2,7 +2,7 @@
 
 # default npme-explicit-installs data to the default pacakages.json and logos.json file.
 if [ ! -d "/etc/npme/data/npm-explicit-installs" ]; then
-  mv /etc/npme/node_modules/npm-explicit-installs /etc/npme/data/npm-explicit-installs
+  cp -r /etc/npme/node_modules/npm-explicit-installs /etc/npme/data/npm-explicit-installs
 fi
 
 { cd /etc/npme/node_modules/@npm/npmo-web-proxy; node ./bin/npmo-web-proxy.js start --auth-host=$AUTH_HOST; } &
