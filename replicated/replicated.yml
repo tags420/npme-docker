@@ -353,8 +353,8 @@ components:
         address: '{{repl ConfigOption "etc_hosts_2_ip" }}'
         when: '{{repl ConfigOptionNotEquals "etc_hosts_2_ip" "" }}'
   - source: public
-    image_name: klaemo/couchdb
-    version: 1.6.1
+    image_name: couchdb
+    version: 1.7.1
     name: npme-couch
     restart:
       policy: on-failure
